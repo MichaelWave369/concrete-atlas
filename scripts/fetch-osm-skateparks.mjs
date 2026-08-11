@@ -57,58 +57,96 @@ function sourceLagHours(timestamp) {
   return Math.max(0, (Date.now() - ms) / 3_600_000);
 }
 
+function hasSkateboardSport(tags = {}) {
+  return String(tags.sport || '').split(';').map(v => v.trim()).includes('skateboard');
+}
+
 function matchTags(tags = {}) {
   const matches = [];
-  if (String(tags.sport || '').split(';').map(v => v.trim()).includes('skateboard')) matches.push('sport=skateboard');
+  if (hasSkateboardSport(tags)) matches.push('sport=skateboard');
   if (tags.leisure === 'skate_park') matches.push('leisure=skate_park');
   if (tags.leisure === 'skatepark') matches.push('leisure=skatepark');
   return matches;
 }
 
+function classifyCandidate(tags = {}, name = '') {
+  const leisure = String(tags.leisure || '').toLowerCase();
+  const skateLeisure = leisure === 'skate_park' || leisure === 'skatepark';
+  const skateSport = hasSkateboardSport(tags);
+  const physicalSportLeisure = ['pitch', 'sports_centre', 'recreation_ground'].includes(leisure);
+  const skateName = /\bskate\s*(park|plaza|facility|center|centre)\b|\bskatepark\b/i.test(name);
+  const obviousCommercial = Boolean(tags.shop || tags.office || tags.craft);
+
+  if (obviousCommercial && !skateLeisure && !physicalSportLeisure) {
+    return { include:false, kind:'excluded_commercial', confidence:'excluded', reason:'commercial_tag_without_skatepark_leisure' };
+  }
+  if (skateLeisure) {
+    return { include:true, kind:'skatepark', confidence:'high', reason:'explicit_skatepark_leisure' };
+  }
+  if (skateSport && physicalSportLeisure) {
+    return { include:true, kind:'skate_facility', confidence:'high', reason:`sport_skateboard_plus_leisure_${leisure}` };
+  }
+  if (skateSport && skateName) {
+    return { include:true, kind:'probable_skatepark', confidence:'medium_high', reason:'sport_skateboard_plus_skatepark_name' };
+  }
+  if (skateSport) {
+    return { include:true, kind:'skateboard_facility_candidate', confidence:'medium', reason:'sport_skateboard_only' };
+  }
+  return { include:false, kind:'excluded_unclassified', confidence:'excluded', reason:'no_supported_skatepark_signal' };
+}
+
 function normalize(el, state, generatedAt) {
   const coords = coordinateOf(el);
-  if (!coords) return null;
+  if (!coords) return { excluded:true, reason:'missing_coordinates' };
   const t = el.tags || {};
   const sourceId = `osm:${el.type}/${el.id}`;
   const name = t.name || t.official_name || t.alt_name || 'Unnamed skatepark';
+  const classification = classifyCandidate(t, name);
+  if (!classification.include) return { excluded:true, reason:classification.reason, kind:classification.kind };
   const address = [t['addr:housenumber'], t['addr:street'], t['addr:city'], t['addr:state'], t['addr:postcode']]
     .filter(Boolean).join(' ');
   return {
-    type: 'Feature',
-    id: sourceId,
-    geometry: { type: 'Point', coordinates: coords },
-    properties: {
-      source_id: sourceId,
-      source: 'OpenStreetMap',
-      osm_type: el.type,
-      osm_id: String(el.id),
-      osm_url: `https://www.openstreetmap.org/${el.type}/${el.id}`,
-      source_state: state,
-      matched_by: matchTags(t),
-      name,
-      named: Boolean(t.name),
-      address: address || null,
-      city: t['addr:city'] || null,
-      postcode: t['addr:postcode'] || null,
-      leisure: t.leisure || null,
-      sport: t.sport || null,
-      surface: t.surface || null,
-      indoor: boolish(t.indoor),
-      lit: boolish(t.lit),
-      covered: boolish(t.covered),
-      access: t.access || null,
-      fee: t.fee || null,
-      opening_hours: t.opening_hours || null,
-      operator: t.operator || null,
-      website: t.website || t['contact:website'] || null,
-      phone: t.phone || t['contact:phone'] || null,
-      description: t.description || null,
-      osm_version: el.version ?? null,
-      osm_timestamp: el.timestamp ?? null,
-      verification_status: 'osm_seeded',
-      community_verified_at: null,
-      ingested_at: generatedAt,
-      tags: t
+    excluded:false,
+    feature: {
+      type: 'Feature',
+      id: sourceId,
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        source_id: sourceId,
+        source: 'OpenStreetMap',
+        osm_type: el.type,
+        osm_id: String(el.id),
+        osm_url: `https://www.openstreetmap.org/${el.type}/${el.id}`,
+        source_state: state,
+        matched_by: matchTags(t),
+        candidate_kind: classification.kind,
+        candidate_confidence: classification.confidence,
+        candidate_reason: classification.reason,
+        name,
+        named: Boolean(t.name),
+        address: address || null,
+        city: t['addr:city'] || null,
+        postcode: t['addr:postcode'] || null,
+        leisure: t.leisure || null,
+        sport: t.sport || null,
+        surface: t.surface || null,
+        indoor: boolish(t.indoor),
+        lit: boolish(t.lit),
+        covered: boolish(t.covered),
+        access: t.access || null,
+        fee: t.fee || null,
+        opening_hours: t.opening_hours || null,
+        operator: t.operator || null,
+        website: t.website || t['contact:website'] || null,
+        phone: t.phone || t['contact:phone'] || null,
+        description: t.description || null,
+        osm_version: el.version ?? null,
+        osm_timestamp: el.timestamp ?? null,
+        verification_status: 'osm_seeded',
+        community_verified_at: null,
+        ingested_at: generatedAt,
+        tags: t
+      }
     }
   };
 }
@@ -124,7 +162,7 @@ async function fetchQuery(state, kind, query) {
         headers: {
           'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
           accept: 'application/json',
-          'user-agent': 'ConcreteAtlas/0.1.1 (nationwide skatepark dataset refresh)'
+          'user-agent': 'ConcreteAtlas/0.1.2 (nationwide skatepark dataset refresh)'
         },
         body: new URLSearchParams({ data: query }),
         signal: controller.signal
@@ -189,6 +227,7 @@ const generatedAt = new Date().toISOString();
 const byId = new Map();
 const failures = [];
 const stateSources = [];
+let excludedNonFacilityCount = 0;
 let previousFeatures = [];
 try {
   const previous = JSON.parse(await readFile(outputPath, 'utf8'));
@@ -209,15 +248,21 @@ for (const [i, state] of STATES.entries()) {
   try {
     const result = await fetchState(state);
     let accepted = 0;
+    let excluded = 0;
     for (const el of result.elements) {
-      const feature = normalize(el, state, generatedAt);
-      if (!feature) continue;
+      const normalized = normalize(el, state, generatedAt);
+      if (!normalized || normalized.excluded) {
+        excluded += 1;
+        continue;
+      }
+      const feature = normalized.feature;
       byId.set(feature.properties.source_id, feature);
       accepted += 1;
     }
-    stateSources.push({ ...result.receipt, feature_count: accepted });
+    excludedNonFacilityCount += excluded;
+    stateSources.push({ ...result.receipt, feature_count: accepted, excluded_non_facility_count: excluded });
     const supplementNote = includeSupplemental && result.receipt.supplemental_error ? ' (supplement unavailable)' : '';
-    console.log(`${accepted} returned; ${byId.size} unique total${supplementNote}`);
+    console.log(`${accepted} accepted, ${excluded} excluded; ${byId.size} unique total${supplementNote}`);
   } catch (error) {
     const retained = previousByState.get(state) || [];
     for (const feature of retained) byId.set(feature.properties.source_id, feature);
@@ -239,7 +284,7 @@ const collection = {
   type: 'FeatureCollection',
   metadata: {
     project: 'Concrete Atlas',
-    version: '0.1.1',
+    version: '0.1.2',
     generated_at: generatedAt,
     source: 'OpenStreetMap via Overpass API',
     coverage: requestedStates.length ? `State chunk: ${STATES.join(',')}` : '50 U.S. states plus District of Columbia',
@@ -249,15 +294,20 @@ const collection = {
     state_sources: stateSources,
     source_freshness_policy_hours: maxSourceLagHours,
     supplemental_enabled: includeSupplemental,
+    excluded_non_facility_count: excludedNonFacilityCount,
     retained_failed_state_features: failures.reduce((sum, x) => sum + (x.retained_feature_count || 0), 0),
-    query_tags: queryTags
+    query_tags: queryTags,
+    classifier: {
+      version: '0.1',
+      principle: 'OSM source candidates are classified before display; obvious commercial records are excluded unless they also carry physical skatepark tags.'
+    }
   },
   features
 };
 
 await mkdir(new URL('../data/', import.meta.url), { recursive: true });
 await writeFile(outputPath, JSON.stringify(collection, null, 2) + '\n', 'utf8');
-console.log(`\nWrote ${features.length} unique features to data/skateparks.geojson`);
+console.log(`\nWrote ${features.length} unique features to data/skateparks.geojson; excluded ${excludedNonFacilityCount} non-facility candidates.`);
 if (failures.length) {
   console.warn(`Partial refresh: ${failures.length} state(s) failed primary ingestion. Re-run to retry.`);
   process.exitCode = 2;
