@@ -19,10 +19,10 @@ concurrency:
 jobs:
   fetch-chunks:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 26
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: 1
       matrix:
         include:
           - id: 1
@@ -47,15 +47,19 @@ jobs:
           node --check scripts/fetch-osm-skateparks.mjs
           node --check scripts/merge-skatepark-chunks.mjs
 
-      - name: Fetch fresh primary state chunk
+      - name: Fetch classified skate-location chunk
         id: refresh
         env:
           STATE_CODES: ${{ matrix.states }}
           OVERPASS_ENDPOINTS: https://overpass-api.de/api/interpreter,https://lz4.overpass-api.de/api/interpreter,https://z.overpass-api.de/api/interpreter
+          SUPPLEMENTAL_OVERPASS_ENDPOINTS: https://overpass-api.de/api/interpreter,https://lz4.overpass-api.de/api/interpreter
           OVERPASS_TIMEOUT_SECONDS: "20"
-          OVERPASS_DELAY_MS: "1500"
+          SUPPLEMENTAL_TIMEOUT_SECONDS: "10"
+          OVERPASS_DELAY_MS: "2500"
+          OVERPASS_RETRY_DELAY_MS: "15000"
           MAX_SOURCE_LAG_HOURS: "72"
-          INCLUDE_SUPPLEMENTAL: "false"
+          INCLUDE_SUPPLEMENTAL: "true"
+          CLASSIFIER_POLICY_VERSION: "0.1"
         run: npm run refresh:data
         continue-on-error: true
 
@@ -102,7 +106,11 @@ jobs:
           const data = JSON.parse(fs.readFileSync('data/skateparks.geojson', 'utf8'));
           const failures = data.metadata?.failed_states || [];
           const receipts = data.metadata?.state_sources || [];
-          console.log(`Skateparks: ${data.features?.length || 0}`);
+          const excluded = data.metadata?.excluded_non_facility_count || 0;
+          const retainedSupplemental = receipts.reduce((sum, x) => sum + (x.retained_supplemental_feature_count || 0), 0);
+          console.log(`Skate candidates: ${data.features?.length || 0}`);
+          console.log(`Excluded non-facility candidates: ${excluded}`);
+          console.log(`Leisure-only candidates retained after enrichment misses: ${retainedSupplemental}`);
           console.log(`State/DC codes requested: ${data.metadata?.requested_states?.length || 0}`);
           console.log(`Fresh state receipts: ${receipts.length}`);
           console.log(`Failed primary states: ${failures.length}`);
@@ -120,5 +128,5 @@ jobs:
           git config user.name "concrete-atlas-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/skateparks.geojson
-          git commit -m "data: refresh OSM skatepark snapshot"
+          git commit -m "data: refresh classified OSM skatepark snapshot"
           git push
