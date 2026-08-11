@@ -1,0 +1,34 @@
+name: Probe Overpass connectivity
+
+on:
+  push:
+    branches: [overpass-probe]
+    paths:
+      - ".github/workflows/overpass-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe current global Overpass instances
+        shell: bash
+        run: |
+          set +e
+          query='[out:json][timeout:5];node(1);out;'
+          endpoints=(
+            'https://overpass.private.coffee/api/interpreter'
+            'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
+            'https://overpass-api.de/api/interpreter'
+          )
+          for endpoint in "${endpoints[@]}"; do
+            echo "=== $endpoint ==="
+            code=$(curl -sS --max-time 12 -o /tmp/overpass-probe.json -w '%{http_code} %{time_total}' -X POST --data-urlencode "data=$query" "$endpoint")
+            rc=$?
+            echo "curl_rc=$rc http_and_seconds=$code"
+            head -c 180 /tmp/overpass-probe.json 2>/dev/null || true
+            echo
+          done
