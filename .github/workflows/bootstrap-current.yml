@@ -1,0 +1,124 @@
+name: Fresh nationwide data bootstrap
+
+on:
+  push:
+    branches: [bootstrap-current]
+    paths:
+      - ".github/workflows/bootstrap-current.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: concrete-atlas-current-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  fetch-chunks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        include:
+          - id: 1
+            states: AL,AK,AZ,AR,CA,CO,CT,DE,FL,GA,HI
+          - id: 2
+            states: ID,IL,IN,IA,KS,KY,LA,ME,MD,MA
+          - id: 3
+            states: MI,MN,MS,MO,MT,NE,NV,NH,NJ,NM
+          - id: 4
+            states: NY,NC,ND,OH,OK,OR,PA,RI,SC,SD
+          - id: 5
+            states: TN,TX,UT,VT,VA,WA,WV,WI,WY,DC
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: bootstrap-current
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check ingestion scripts
+        run: |
+          node --check scripts/fetch-osm-skateparks.mjs
+          node --check scripts/merge-skatepark-chunks.mjs
+
+      - name: Fetch fresh state chunk
+        id: refresh
+        env:
+          STATE_CODES: ${{ matrix.states }}
+          OVERPASS_ENDPOINTS: https://overpass-api.de/api/interpreter,https://lz4.overpass-api.de/api/interpreter,https://z.overpass-api.de/api/interpreter
+          OVERPASS_TIMEOUT_SECONDS: "12"
+          OVERPASS_DELAY_MS: "400"
+          MAX_SOURCE_LAG_HOURS: "72"
+        run: npm run refresh:data
+        continue-on-error: true
+
+      - name: Validate chunk
+        run: npm run validate:data
+
+      - name: Preserve chunk file
+        run: cp data/skateparks.geojson "chunk-${{ matrix.id }}.geojson"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: current-chunk-${{ matrix.id }}
+          path: chunk-${{ matrix.id }}.geojson
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    needs: fetch-chunks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: bootstrap-current
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: current-chunk-*
+          path: partials
+          merge-multiple: true
+
+      - name: Merge and deduplicate chunks
+        run: node scripts/merge-skatepark-chunks.mjs partials data/skateparks.geojson
+
+      - name: Validate merged nationwide snapshot
+        run: npm run validate:data
+
+      - name: Enforce nationwide coverage contract
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('data/skateparks.geojson', 'utf8'));
+          const failures = data.metadata?.failed_states || [];
+          const receipts = data.metadata?.state_sources || [];
+          console.log(`Skateparks: ${data.features?.length || 0}`);
+          console.log(`State/DC codes requested: ${data.metadata?.requested_states?.length || 0}`);
+          console.log(`Fresh state receipts: ${receipts.length}`);
+          console.log(`Failed primary states: ${failures.length}`);
+          if ((data.metadata?.requested_states?.length || 0) !== 51) throw new Error('Expected 51 state/DC codes');
+          if (!data.features?.length) throw new Error('Nationwide snapshot is empty');
+          if (failures.length) console.log(`::warning::Primary failures retained in metadata: ${failures.map(x => x.state).join(', ')}`);
+          NODE
+
+      - name: Commit fresh nationwide snapshot
+        run: |
+          git config user.name "concrete-atlas-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/skateparks.geojson
+          if git diff --cached --quiet; then
+            echo "No data changes."
+            exit 0
+          fi
+          git commit -m "data: bootstrap fresh nationwide skatepark snapshot"
+          git push origin HEAD:bootstrap-current
