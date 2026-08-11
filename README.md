@@ -1,4 +1,4 @@
-# Concrete Atlas v0.1.2
+# Concrete Atlas v0.1.3
 
 **The living map of American skateboarding.**
 
@@ -6,7 +6,7 @@ Public, open-source, and provenance-aware: the application software is MIT-licen
 
 Concrete Atlas is a static-first interactive U.S. skatepark atlas. It uses MapLibre GL JS for the map, OpenFreeMap for the basemap, and OpenStreetMap/Overpass as the initial nationwide data seed.
 
-## v0.1.2 capabilities
+## v0.1.3 capabilities
 
 - U.S.-wide interactive map shell and clustering
 - Search by park/city/operator
@@ -21,8 +21,11 @@ Concrete Atlas is a static-first interactive U.S. skatepark atlas. It uses MapLi
 - Candidate classification before publication
 - Obvious commercial records quarantined unless they also carry physical skatepark tags
 - Explicit `candidate_kind`, `candidate_confidence`, and `candidate_reason`
+- Deterministic Data Quality Observatory report
+- Header receipts for named coverage, surface coverage, and failed-state count
 - Static GeoJSON snapshot suitable for Netlify
 - GitHub CI and twice-monthly/manual dataset refresh
+- Independent quality-report publication when canonical data changes
 
 ## First run
 
@@ -31,6 +34,7 @@ Requirements: Node.js 20+ and internet access.
 ```bash
 npm run refresh:data
 npm run validate:data
+npm run report:data
 npm run serve
 ```
 
@@ -46,35 +50,42 @@ The initial verification state is `osm_seeded`. Community evidence must promote 
 
 The importer intentionally separates source discovery from publication classification.
 
-High-confidence examples include:
+High-confidence examples include explicit `leisure=skate_park` / `leisure=skatepark` records and `sport=skateboard` objects combined with physical recreation tags. Medium-confidence candidates include skateboard-tagged objects whose names identify a skatepark or skate plaza plus other non-commercial skateboard-facility records.
 
-- explicit `leisure=skate_park` or `leisure=skatepark`
-- `sport=skateboard` combined with a physical recreation tag such as `leisure=pitch` or `leisure=sports_centre`
+Objects tagged as `shop`, `office`, or `craft` are excluded unless they also carry a physical skatepark/recreation signal. Every accepted record stores `candidate_kind`, `candidate_confidence`, `candidate_reason`, `matched_by`, and raw OSM tags.
 
-Medium-confidence candidates include skateboard-tagged objects whose names identify a skatepark or skate plaza, plus other skateboard-facility records that are not obviously commercial.
+The classifier is deliberately conservative and versioned so future governance passes can improve it without erasing provenance.
 
-Objects tagged as `shop`, `office`, or `craft` are excluded unless they also carry a physical skatepark/recreation signal. This prevents skate shops and similar businesses from silently becoming “parks” just because OSM associates them with skateboarding.
+## Data Quality Observatory
 
-Every accepted record stores:
+`npm run report:data` deterministically derives `data/quality-report.json` from the canonical GeoJSON snapshot.
 
-- `candidate_kind`
-- `candidate_confidence`
-- `candidate_reason`
-- `matched_by`
-- raw OSM tags
+The report measures dataset health as separate, auditable dimensions rather than collapsing unrelated facts into one score. It includes:
 
-This classifier is deliberately conservative and versioned so future governance passes can improve it without erasing provenance.
+- total source candidates and quarantined non-facility candidates
+- name, surface, lighting, hours, indoor, address, operator, website, and access coverage
+- classifier coverage and confidence distribution
+- verification-state distribution
+- candidate counts by state/DC
+- primary source freshness statistics
+- supplemental-source availability
+- failed primary states and retained fallback counts
+
+These are **metadata and provenance measurements**, not ratings of park quality, safety, legality, accessibility, or current skateability.
+
+The browser loads the report independently through `assets/quality.js`; if the report is absent or malformed, the map itself continues to function.
+
+## Refresh architecture
+
+The nationwide OSM crawl is intentionally schedule/manual only. It runs finite state chunks with serialized public-Overpass access, rate-limit backoff, source-freshness validation, deterministic merging, validation, and failed-state retention.
+
+Quality-report generation is a separate lightweight workflow. A changed canonical `data/skateparks.geojson` automatically regenerates `data/quality-report.json` without launching another nationwide crawl.
 
 ## OSM query policy
 
 The canonical primary pass queries each state + D.C. for `sport` values containing `skateboard`. A primary-query failure is a real state refresh failure.
 
-Optional non-blocking enrichment can additionally query:
-
-- `leisure=skate_park`
-- `leisure=skatepark`
-
-If enrichment is unavailable or rate-limited, the primary skateboarding dataset remains usable and the enrichment failure is recorded instead of failing the state.
+Optional non-blocking enrichment additionally queries explicit `leisure=skate_park` and `leisure=skatepark` records. If enrichment is unavailable or rate-limited, the primary dataset remains usable and the enrichment failure is recorded instead of failing the state.
 
 ## Source freshness receipts
 
@@ -85,10 +96,6 @@ The nationwide snapshot contains per-state source receipts so mixed-source refre
 ## Partial refresh behavior
 
 If a primary state query fails, Concrete Atlas retains that state's last known records rather than deleting the state from the atlas. Failed states and retained-record counts are written into metadata.
-
-## Why refreshes are bounded
-
-Concrete Atlas does **not** use public Overpass as the visitor-facing backend. The scheduled refresh uses finite state chunks with bounded concurrency, validates each chunk, deterministically merges them, and serves visitors a static GeoJSON snapshot.
 
 ## Production scaling path
 
