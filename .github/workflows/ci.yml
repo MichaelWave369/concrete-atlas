@@ -24,20 +24,19 @@ jobs:
           node --check assets/app.js
           node --check assets/quality.js
 
-      - name: Check importer syntax
-        run: node --check scripts/fetch-osm-skateparks.mjs
+      - name: Check data pipeline syntax
+        run: |
+          node --check scripts/fetch-osm-skateparks.mjs
+          node --check scripts/merge-skatepark-chunks.mjs
+          node --check scripts/enrich-park-intelligence.mjs
+          node --check scripts/validate-geojson.mjs
+          node --check scripts/build-quality-report.mjs
 
-      - name: Check chunk merger syntax
-        run: node --check scripts/merge-skatepark-chunks.mjs
+      - name: Enrich bundled snapshot with Park Intelligence
+        run: npm run enrich:intelligence
 
-      - name: Check validator syntax
-        run: node --check scripts/validate-geojson.mjs
-
-      - name: Check quality report generator syntax
-        run: node --check scripts/build-quality-report.mjs
-
-      - name: Validate bundled GeoJSON snapshot
+      - name: Validate enriched GeoJSON snapshot
         run: npm run validate:data
 
-      - name: Build quality report from bundled snapshot
+      - name: Build quality report from enriched snapshot
         run: npm run report:data

@@ -42,6 +42,7 @@ jobs:
         run: |
           node --check scripts/fetch-osm-skateparks.mjs
           node --check scripts/merge-skatepark-chunks.mjs
+          node --check scripts/enrich-park-intelligence.mjs
           node --check scripts/build-quality-report.mjs
 
       - name: Fetch classified skate-location chunk
@@ -91,6 +92,9 @@ jobs:
 
       - name: Merge and deduplicate chunks
         run: node scripts/merge-skatepark-chunks.mjs partials data/skateparks.geojson
+
+      - name: Enrich Park Intelligence from stored OSM tags
+        run: npm run enrich:intelligence
 
       - name: Validate merged nationwide snapshot
         run: npm run validate:data
