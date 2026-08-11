@@ -14,22 +14,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Profile California skatepark selectors
+      - name: Probe California leisure query on current backends
         shell: bash
         run: |
           set +e
-          endpoint='https://overpass-api.de/api/interpreter'
-          queries=(
-            '[out:json][timeout:20];area["ISO3166-2"="US-CA"][admin_level=4]->.a;nwr["leisure"="skate_park"](area.a);out count;'
-            '[out:json][timeout:20];area["ISO3166-2"="US-CA"][admin_level=4]->.a;nwr["sport"~"(^|;)skateboard(;|$)"](area.a);out count;'
-            '[out:json][timeout:20];area["ISO3166-2"="US-CA"][admin_level=4]->.a;(nwr["leisure"="skate_park"](area.a);nwr["sport"~"(^|;)skateboard(;|$)"](area.a););out count;'
+          query='[out:json][timeout:20];area["ISO3166-2"="US-CA"][admin_level=4]->.a;nwr["leisure"="skate_park"](area.a);out count;'
+          endpoints=(
+            'https://lz4.overpass-api.de/api/interpreter'
+            'https://z.overpass-api.de/api/interpreter'
+            'https://overpass-api.de/api/interpreter'
+            'https://overpass.private.coffee/api/interpreter'
           )
-          labels=('leisure' 'sport' 'combined')
-          for i in 0 1 2; do
-            echo "=== ${labels[$i]} ==="
-            code=$(curl -sS --max-time 25 -o /tmp/overpass-profile.json -w '%{http_code} %{time_total}' -X POST --data-urlencode "data=${queries[$i]}" "$endpoint")
+          for endpoint in "${endpoints[@]}"; do
+            echo "=== $endpoint ==="
+            code=$(curl -sS --max-time 25 -o /tmp/overpass-profile.json -w '%{http_code} %{time_total}' -X POST --data-urlencode "data=$query" "$endpoint")
             rc=$?
             echo "curl_rc=$rc http_and_seconds=$code"
-            cat /tmp/overpass-profile.json 2>/dev/null | head -c 600 || true
+            grep -Eo '"timestamp_osm_base"[^,]*|"total"[^,}]*|Error[^<]*' /tmp/overpass-profile.json 2>/dev/null | head -n 8 || true
             echo
           done
