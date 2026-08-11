@@ -1,0 +1,163 @@
+{
+  "schema_version": "0.1",
+  "project": "Concrete Atlas",
+  "generated_at": "2026-08-11T06:25:53.256Z",
+  "snapshot_generated_at": "2026-08-11T06:02:48.176Z",
+  "snapshot_version": "0.1.2",
+  "totals": {
+    "source_candidates": 4199,
+    "excluded_non_facility_candidates": 158,
+    "requested_state_dc_codes": 51,
+    "fresh_state_receipts": 50,
+    "failed_primary_states": 1,
+    "retained_failed_state_features": 7,
+    "retained_supplemental_features": 0
+  },
+  "field_coverage": {
+    "named": {
+      "count": 1451,
+      "percent": 34.56
+    },
+    "classified": {
+      "count": 4199,
+      "percent": 100
+    },
+    "surface_known": {
+      "count": 1577,
+      "percent": 37.56
+    },
+    "concrete_surface": {
+      "count": 1256,
+      "percent": 29.91
+    },
+    "lights_known": {
+      "count": 586,
+      "percent": 13.96
+    },
+    "opening_hours_known": {
+      "count": 82,
+      "percent": 1.95
+    },
+    "indoor_status_known": {
+      "count": 54,
+      "percent": 1.29
+    },
+    "address_known": {
+      "count": 232,
+      "percent": 5.53
+    },
+    "operator_known": {
+      "count": 74,
+      "percent": 1.76
+    },
+    "website_known": {
+      "count": 183,
+      "percent": 4.36
+    },
+    "access_known": {
+      "count": 567,
+      "percent": 13.5
+    },
+    "community_verified": {
+      "count": 0,
+      "percent": 0
+    }
+  },
+  "distributions": {
+    "candidate_kind": {
+      "skate_facility": 4118,
+      "probable_skatepark": 48,
+      "skateboard_facility_candidate": 31,
+      "skatepark": 2
+    },
+    "candidate_confidence": {
+      "high": 4120,
+      "medium_high": 48,
+      "medium": 31
+    },
+    "verification_status": {
+      "osm_seeded": 4199
+    },
+    "source_state": {
+      "CA": 559,
+      "TX": 229,
+      "WA": 213,
+      "IL": 185,
+      "CO": 172,
+      "NY": 157,
+      "OH": 156,
+      "MI": 146,
+      "FL": 140,
+      "PA": 132,
+      "MN": 130,
+      "OR": 129,
+      "WI": 121,
+      "MA": 113,
+      "AZ": 105,
+      "MO": 83,
+      "NJ": 81,
+      "IN": 76,
+      "NC": 74,
+      "VA": 70,
+      "UT": 69,
+      "NM": 67,
+      "IA": 65,
+      "NV": 59,
+      "CT": 57,
+      "ID": 57,
+      "GA": 56,
+      "MD": 56,
+      "KS": 54,
+      "OK": 54,
+      "TN": 49,
+      "KY": 47,
+      "NH": 44,
+      "MT": 40,
+      "AR": 39,
+      "ME": 29,
+      "WY": 29,
+      "AL": 28,
+      "NE": 27,
+      "WV": 26,
+      "ND": 25,
+      "SD": 22,
+      "VT": 21,
+      "HI": 19,
+      "LA": 19,
+      "RI": 18,
+      "AK": 16,
+      "SC": 13,
+      "MS": 10,
+      "DC": 7,
+      "DE": 6
+    }
+  },
+  "source_health": {
+    "freshness_policy_hours": 72,
+    "primary_source_lag_hours": {
+      "count": 50,
+      "min": 0.02,
+      "median": 0.03,
+      "mean": 0.03,
+      "max": 0.03
+    },
+    "supplemental_enabled": true,
+    "supplemental_success_states": 37,
+    "supplemental_unavailable_states": 13,
+    "failed_primary_states": [
+      {
+        "state": "DC",
+        "error": "504 Gateway Timeout",
+        "retained_feature_count": 7,
+        "retained_excluded_non_facility_count": 0
+      }
+    ]
+  },
+  "governance": {
+    "classifier": {
+      "version": "0.1",
+      "principle": "OSM source candidates are classified before display; obvious commercial records are excluded unless they also carry physical skatepark tags."
+    },
+    "principle": "Source is not verification. Quality metrics describe dataset coverage and provenance, not real-world skateability or safety."
+  }
+}
