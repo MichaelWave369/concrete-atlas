@@ -13,14 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
 
       - name: Check browser JavaScript syntax
-        run: node --check assets/app.js
+        run: |
+          node --check assets/app.js
+          node --check assets/quality.js
 
       - name: Check importer syntax
         run: node --check scripts/fetch-osm-skateparks.mjs
@@ -31,5 +33,11 @@ jobs:
       - name: Check validator syntax
         run: node --check scripts/validate-geojson.mjs
 
+      - name: Check quality report generator syntax
+        run: node --check scripts/build-quality-report.mjs
+
       - name: Validate bundled GeoJSON snapshot
         run: npm run validate:data
+
+      - name: Build quality report from bundled snapshot
+        run: npm run report:data
