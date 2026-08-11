@@ -12,25 +12,29 @@ for (const state of STATES) {
 
 const endpoints = (process.env.OVERPASS_ENDPOINTS || 'https://overpass-api.de/api/interpreter,https://lz4.overpass-api.de/api/interpreter,https://z.overpass-api.de/api/interpreter')
   .split(',').map(v => v.trim()).filter(Boolean);
+const supplementalEndpoints = (process.env.SUPPLEMENTAL_OVERPASS_ENDPOINTS || 'https://overpass-api.de/api/interpreter,https://lz4.overpass-api.de/api/interpreter')
+  .split(',').map(v => v.trim()).filter(Boolean);
 const pauseMs = Number(process.env.OVERPASS_DELAY_MS || 2500);
 const timeoutSeconds = Number(process.env.OVERPASS_TIMEOUT_SECONDS || 20);
+const supplementalTimeoutSeconds = Number(process.env.SUPPLEMENTAL_TIMEOUT_SECONDS || 10);
 const retryDelayMs = Number(process.env.OVERPASS_RETRY_DELAY_MS || 15000);
 const maxSourceLagHours = Number(process.env.MAX_SOURCE_LAG_HOURS || 72);
-const includeSupplemental = /^(1|true|yes)$/i.test(process.env.INCLUDE_SUPPLEMENTAL || 'false');
+const includeSupplemental = /^(1|true|yes)$/i.test(process.env.INCLUDE_SUPPLEMENTAL || 'true');
+const classifierPolicyVersion = process.env.CLASSIFIER_POLICY_VERSION || '0.1';
 const outputPath = new URL('../data/skateparks.geojson', import.meta.url);
 
-function areaPrefix(state) {
-  return `[out:json][timeout:${timeoutSeconds}];\narea["ISO3166-2"="US-${state}"][admin_level=4]->.searchArea;\n`;
+function areaPrefix(state, queryTimeoutSeconds) {
+  return `[out:json][timeout:${queryTimeoutSeconds}];\narea["ISO3166-2"="US-${state}"][admin_level=4]->.searchArea;\n`;
 }
 
 function primaryQuery(state) {
-  return areaPrefix(state) +
+  return areaPrefix(state, timeoutSeconds) +
     `nwr["sport"~"(^|;)skateboard(;|$)"](area.searchArea);\n` +
     `out center tags meta;`;
 }
 
 function supplementalQuery(state) {
-  return areaPrefix(state) +
+  return areaPrefix(state, supplementalTimeoutSeconds) +
     `(\n` +
     `  nwr["leisure"="skate_park"](area.searchArea);\n` +
     `  nwr["leisure"="skatepark"](area.searchArea);\n` +
@@ -68,6 +72,12 @@ function matchTags(tags = {}) {
   if (tags.leisure === 'skate_park') matches.push('leisure=skate_park');
   if (tags.leisure === 'skatepark') matches.push('leisure=skatepark');
   return matches;
+}
+
+function isLeisureOnlyCandidate(feature) {
+  const tags = feature?.properties?.tags || {};
+  const leisure = tags.leisure === 'skate_park' || tags.leisure === 'skatepark';
+  return leisure && !hasSkateboardSport(tags);
 }
 
 function classifyCandidate(tags = {}, name = '') {
@@ -180,12 +190,17 @@ function retryAfterMs(response) {
   return retryDelayMs;
 }
 
-async function fetchQuery(state, kind, query) {
+async function fetchQuery(state, kind, query, options = {}) {
+  const endpointList = options.endpointList || endpoints;
+  const requestTimeoutSeconds = options.requestTimeoutSeconds || timeoutSeconds;
+  const maxAttemptsPerEndpoint = options.maxAttemptsPerEndpoint || 2;
+  const retryRateLimits = options.retryRateLimits !== false;
   let lastError;
-  for (const endpoint of endpoints) {
-    for (let attempt = 1; attempt <= 2; attempt += 1) {
+
+  for (const endpoint of endpointList) {
+    for (let attempt = 1; attempt <= maxAttemptsPerEndpoint; attempt += 1) {
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), (timeoutSeconds + 7) * 1000);
+      const timer = setTimeout(() => controller.abort(), (requestTimeoutSeconds + 7) * 1000);
       try {
         const response = await fetch(endpoint, {
           method: 'POST',
@@ -197,7 +212,7 @@ async function fetchQuery(state, kind, query) {
           body: new URLSearchParams({ data: query }),
           signal: controller.signal
         });
-        if (response.status === 429 && attempt < 2) {
+        if (response.status === 429 && retryRateLimits && attempt < maxAttemptsPerEndpoint) {
           const delay = retryAfterMs(response);
           console.warn(`[${state}] ${kind} ${endpoint} rate limited; backing off ${Math.ceil(delay / 1000)}s before retry`);
           await sleep(delay);
@@ -240,10 +255,20 @@ async function fetchState(state) {
   let supplementalError = null;
   if (includeSupplemental) {
     try {
-      supplemental = await fetchQuery(state, 'supplemental:leisure=skate_park|skatepark', supplementalQuery(state));
+      supplemental = await fetchQuery(
+        state,
+        'supplemental:leisure=skate_park|skatepark',
+        supplementalQuery(state),
+        {
+          endpointList: supplementalEndpoints,
+          requestTimeoutSeconds: supplementalTimeoutSeconds,
+          maxAttemptsPerEndpoint: 1,
+          retryRateLimits: false
+        }
+      );
     } catch (error) {
       supplementalError = error.message;
-      console.warn(`[${state}] supplemental skatepark tags unavailable: ${error.message}`);
+      console.warn(`[${state}] supplemental skatepark enrichment unavailable: ${error.message}`);
     }
   }
   const elements = new Map();
@@ -290,8 +315,9 @@ for (const [i, state] of STATES.entries()) {
   process.stdout.write(`[${i + 1}/${STATES.length}] US-${state} ... `);
   try {
     const result = await fetchState(state);
-    let accepted = 0;
+    let acceptedFresh = 0;
     let excluded = 0;
+    const currentStateIds = new Set();
     for (const el of result.elements) {
       const normalized = normalize(el, state, generatedAt);
       if (!normalized || normalized.excluded) {
@@ -300,12 +326,33 @@ for (const [i, state] of STATES.entries()) {
       }
       const feature = normalized.feature;
       byId.set(feature.properties.source_id, feature);
-      accepted += 1;
+      currentStateIds.add(feature.properties.source_id);
+      acceptedFresh += 1;
     }
+
+    let retainedSupplemental = 0;
+    if (!result.receipt.supplemental) {
+      const retained = previousByState.get(state) || { features: [] };
+      for (const feature of retained.features) {
+        if (!isLeisureOnlyCandidate(feature)) continue;
+        if (currentStateIds.has(feature.properties.source_id)) continue;
+        byId.set(feature.properties.source_id, feature);
+        retainedSupplemental += 1;
+      }
+    }
+
     excludedNonFacilityCount += excluded;
-    stateSources.push({ ...result.receipt, feature_count: accepted, excluded_non_facility_count: excluded });
-    const supplementNote = includeSupplemental && result.receipt.supplemental_error ? ' (supplement unavailable)' : '';
-    console.log(`${accepted} accepted, ${excluded} excluded; ${byId.size} unique total${supplementNote}`);
+    stateSources.push({
+      ...result.receipt,
+      feature_count: acceptedFresh + retainedSupplemental,
+      fresh_feature_count: acceptedFresh,
+      retained_supplemental_feature_count: retainedSupplemental,
+      excluded_non_facility_count: excluded
+    });
+    const supplementNote = result.receipt.supplemental
+      ? ''
+      : ` (supplement unavailable; retained ${retainedSupplemental} leisure-only prior candidate(s))`;
+    console.log(`${acceptedFresh} fresh accepted, ${retainedSupplemental} supplement-retained, ${excluded} excluded; ${byId.size} unique total${supplementNote}`);
   } catch (error) {
     const retained = previousByState.get(state) || { features: [], excluded_non_facility_count: 0 };
     for (const feature of retained.features) byId.set(feature.properties.source_id, feature);
@@ -343,11 +390,12 @@ const collection = {
     state_sources: stateSources,
     source_freshness_policy_hours: maxSourceLagHours,
     supplemental_enabled: includeSupplemental,
+    supplemental_timeout_seconds: supplementalTimeoutSeconds,
     excluded_non_facility_count: excludedNonFacilityCount,
     retained_failed_state_features: failures.reduce((sum, x) => sum + (x.retained_feature_count || 0), 0),
     query_tags: queryTags,
     classifier: {
-      version: '0.1',
+      version: classifierPolicyVersion,
       principle: 'OSM source candidates are classified before display; obvious commercial records are excluded unless they also carry physical skatepark tags.'
     }
   },
