@@ -2,6 +2,10 @@ name: Refresh skatepark data
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/refresh-data.yml"
   schedule:
     - cron: "17 9 1,15 * *"
 
@@ -10,7 +14,7 @@ permissions:
 
 concurrency:
   group: concrete-atlas-data-refresh
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   fetch-chunks:
