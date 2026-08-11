@@ -1,9 +1,14 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { setTimeout as sleep } from 'node:timers/promises';
 
-const STATES = [
+const ALL_STATES = [
   'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'
 ];
+const requestedStates = (process.env.STATE_CODES || '').split(',').map(v => v.trim().toUpperCase()).filter(Boolean);
+const STATES = requestedStates.length ? requestedStates : ALL_STATES;
+for (const state of STATES) {
+  if (!ALL_STATES.includes(state)) throw new Error(`Unknown U.S. state code: ${state}`);
+}
 
 const endpoints = (process.env.OVERPASS_ENDPOINTS || 'https://overpass.private.coffee/api/interpreter,https://overpass-api.de/api/interpreter')
   .split(',').map(v => v.trim()).filter(Boolean);
@@ -40,10 +45,9 @@ function normalize(el, state, generatedAt) {
   if (!coords) return null;
   const t = el.tags || {};
   const sourceId = `osm:${el.type}/${el.id}`;
-  const name = t.name || t['official_name'] || t['alt_name'] || 'Unnamed skatepark';
+  const name = t.name || t.official_name || t.alt_name || 'Unnamed skatepark';
   const address = [t['addr:housenumber'], t['addr:street'], t['addr:city'], t['addr:state'], t['addr:postcode']]
     .filter(Boolean).join(' ');
-  const osmUrl = `https://www.openstreetmap.org/${el.type}/${el.id}`;
   return {
     type: 'Feature',
     id: sourceId,
@@ -53,7 +57,7 @@ function normalize(el, state, generatedAt) {
       source: 'OpenStreetMap',
       osm_type: el.type,
       osm_id: String(el.id),
-      osm_url: osmUrl,
+      osm_url: `https://www.openstreetmap.org/${el.type}/${el.id}`,
       source_state: state,
       name,
       named: Boolean(t.name),
@@ -87,26 +91,27 @@ async function fetchState(state) {
   const query = queryFor(state);
   let lastError;
   for (const endpoint of endpoints) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), (timeoutSeconds + 10) * 1000);
     try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), (timeoutSeconds + 10) * 1000);
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
-          'accept': 'application/json',
+          accept: 'application/json',
           'user-agent': 'ConcreteAtlas/0.1 (nationwide skatepark dataset refresh)'
         },
         body: new URLSearchParams({ data: query }),
         signal: controller.signal
       });
-      clearTimeout(timer);
       if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
       const json = await response.json();
       return json.elements || [];
     } catch (error) {
       lastError = error;
       console.warn(`[${state}] ${endpoint} failed: ${error.message}`);
+    } finally {
+      clearTimeout(timer);
     }
   }
   throw lastError || new Error(`No Overpass endpoint succeeded for ${state}`);
@@ -163,7 +168,8 @@ const collection = {
     version: '0.1.1',
     generated_at: generatedAt,
     source: 'OpenStreetMap via Overpass API',
-    coverage: '50 U.S. states plus District of Columbia',
+    coverage: requestedStates.length ? `State chunk: ${STATES.join(',')}` : '50 U.S. states plus District of Columbia',
+    requested_states: STATES,
     feature_count: features.length,
     failed_states: failures,
     retained_failed_state_features: failures.reduce((sum, x) => sum + (x.retained_feature_count || 0), 0),
