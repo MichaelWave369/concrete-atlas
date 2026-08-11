@@ -27,6 +27,28 @@ map.addControl(new maplibregl.NavigationControl(), 'top-left');
 function esc(v='') { return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function valueOr(v, fallback='Unknown') { return v == null || v === '' ? fallback : v; }
 function yesNo(v) { return v === true ? 'Yes' : v === false ? 'No' : 'Unknown'; }
+function hasSkateboardSport(tags={}) { return String(tags.sport||'').split(';').map(v=>v.trim()).includes('skateboard'); }
+function matchedBy(tags={}) {
+  const matches=[];
+  if (hasSkateboardSport(tags)) matches.push('sport=skateboard');
+  if (tags.leisure === 'skate_park') matches.push('leisure=skate_park');
+  if (tags.leisure === 'skatepark') matches.push('leisure=skatepark');
+  return matches;
+}
+function classifySourceCandidate(tags={}, name='') {
+  const leisure=String(tags.leisure||'').toLowerCase();
+  const skateLeisure=leisure==='skate_park' || leisure==='skatepark';
+  const skateSport=hasSkateboardSport(tags);
+  const physicalSportLeisure=['pitch','sports_centre','recreation_ground'].includes(leisure);
+  const skateName=/\bskate\s*(park|plaza|facility|center|centre)\b|\bskatepark\b/i.test(name);
+  const obviousCommercial=Boolean(tags.shop || tags.office || tags.craft);
+  if (obviousCommercial && !skateLeisure && !physicalSportLeisure) return null;
+  if (skateLeisure) return {kind:'skatepark',confidence:'high',reason:'explicit_skatepark_leisure'};
+  if (skateSport && physicalSportLeisure) return {kind:'skate_facility',confidence:'high',reason:`sport_skateboard_plus_leisure_${leisure}`};
+  if (skateSport && skateName) return {kind:'probable_skatepark',confidence:'medium_high',reason:'sport_skateboard_plus_skatepark_name'};
+  if (skateSport) return {kind:'skateboard_facility_candidate',confidence:'medium',reason:'sport_skateboard_only'};
+  return null;
+}
 function distanceKm(a, b) {
   const toRad = d => d * Math.PI / 180;
   const [lng1, lat1] = a; const [lng2, lat2] = b;
@@ -120,11 +142,12 @@ function renderSidebar() {
   }
   const list = candidates.slice(0, 80);
   if (!list.length) {
-    wrap.innerHTML = `<div class="empty">No parks match the current view. If this source package has no bundled snapshot yet, choose a state and press <strong>Load selected state live</strong>, or run <code>npm run refresh:data</code> once to build the full U.S. snapshot.</div>`;
+    wrap.innerHTML = `<div class="empty">No source candidates match the current view. Choose another state/filter, or refresh the source snapshot.</div>`;
     return;
   }
   wrap.innerHTML = list.map((f,i) => {
     const p=f.properties; const labels=[];
+    if (p.candidate_confidence) labels.push(`<span class="chip">${esc(p.candidate_confidence)} confidence</span>`);
     if (p.surface) labels.push(`<span class="chip">${esc(p.surface)}</span>`);
     if (p.lit===true) labels.push(`<span class="chip accent">lights</span>`);
     if (p.indoor===true) labels.push(`<span class="chip">indoor</span>`);
@@ -137,16 +160,19 @@ function renderSidebar() {
 function openPark(feature, { syncHash=true } = {}) {
   const p = feature.properties || {};
   const drawer = document.querySelector('#drawer');
-  document.querySelector('#drawer-title').textContent = p.name || 'Unnamed skatepark';
+  document.querySelector('#drawer-title').textContent = p.name || 'Unnamed skate location';
   document.querySelector('#drawer-body').innerHTML = `
     <div class="chips">
       <span class="chip accent">${esc(p.verification_status || 'osm_seeded')}</span>
+      ${p.candidate_confidence ? `<span class="chip">${esc(p.candidate_confidence)} confidence</span>`:''}
       ${p.surface ? `<span class="chip">${esc(p.surface)}</span>`:''}
       ${p.indoor===true ? '<span class="chip">indoor</span>':''}
       ${p.lit===true ? '<span class="chip">lights</span>':''}
       ${p.covered===true ? '<span class="chip">covered</span>':''}
     </div>
     <dl class="kv">
+      <dt>Candidate type</dt><dd>${esc(valueOr(p.candidate_kind))}</dd>
+      <dt>Candidate reason</dt><dd>${esc(valueOr(p.candidate_reason))}</dd>
       <dt>State</dt><dd>${esc(valueOr(p.source_state))}</dd>
       <dt>Address</dt><dd>${esc(valueOr(p.address))}</dd>
       <dt>Surface</dt><dd>${esc(valueOr(p.surface))}</dd>
@@ -175,22 +201,27 @@ async function loadSnapshot() {
     mergeFeatures(json.features || []);
     openParkFromHash();
     const failed = state.metadata.failed_states || [];
-    if (failed.length) document.querySelector('#notice').textContent = `Snapshot loaded with partial coverage: ${failed.length} state(s) failed the latest refresh (${failed.map(x=>x.state).join(', ')}). OSM records remain leads, not guarantees.`;
+    if (failed.length) document.querySelector('#notice').textContent = `Snapshot loaded with partial coverage: ${failed.length} state(s) failed the latest refresh (${failed.map(x=>x.state).join(', ')}). OSM records remain source candidates, not guarantees.`;
   } catch (error) {
     console.warn('Snapshot unavailable', error);
   }
 }
 
 function liveQuery(stateCode) {
-  return `[out:json][timeout:90];area["ISO3166-2"="US-${stateCode}"][admin_level=4]->.a;(nwr["leisure"="skate_park"](area.a);nwr["sport"~"(^|;)skateboard(;|$)"](area.a););out center tags meta;`;
+  return `[out:json][timeout:90];area["ISO3166-2"="US-${stateCode}"][admin_level=4]->.a;(nwr["leisure"="skate_park"](area.a);nwr["leisure"="skatepark"](area.a);nwr["sport"~"(^|;)skateboard(;|$)"](area.a););out center tags meta;`;
 }
 function normalizeLive(el, st) {
   const coords = Number.isFinite(el.lon) ? [el.lon,el.lat] : Number.isFinite(el.center?.lon) ? [el.center.lon,el.center.lat] : null;
   if (!coords) return null;
-  const t=el.tags||{}; const sourceId=`osm:${el.type}/${el.id}`;
+  const t=el.tags||{};
+  const name=t.name||t.official_name||t.alt_name||'Unnamed skate location';
+  const classification=classifySourceCandidate(t,name);
+  if (!classification) return null;
+  const sourceId=`osm:${el.type}/${el.id}`;
   return { type:'Feature', id:sourceId, geometry:{type:'Point',coordinates:coords}, properties:{
     source_id:sourceId, source:'OpenStreetMap', osm_type:el.type, osm_id:String(el.id), osm_url:`https://www.openstreetmap.org/${el.type}/${el.id}`, source_state:st,
-    name:t.name||t.official_name||t.alt_name||'Unnamed skatepark', named:Boolean(t.name), address:[t['addr:housenumber'],t['addr:street'],t['addr:city'],t['addr:state'],t['addr:postcode']].filter(Boolean).join(' ')||null,
+    matched_by:matchedBy(t), candidate_kind:classification.kind, candidate_confidence:classification.confidence, candidate_reason:classification.reason,
+    name, named:Boolean(t.name), address:[t['addr:housenumber'],t['addr:street'],t['addr:city'],t['addr:state'],t['addr:postcode']].filter(Boolean).join(' ')||null,
     city:t['addr:city']||null, leisure:t.leisure||null, sport:t.sport||null, surface:t.surface||null, indoor:['yes','true','1'].includes(String(t.indoor).toLowerCase())?true:['no','false','0'].includes(String(t.indoor).toLowerCase())?false:null,
     lit:['yes','true','1'].includes(String(t.lit).toLowerCase())?true:['no','false','0'].includes(String(t.lit).toLowerCase())?false:null, covered:['yes','true','1'].includes(String(t.covered).toLowerCase())?true:null,
     access:t.access||null, fee:t.fee||null, opening_hours:t.opening_hours||null, operator:t.operator||null, website:t.website||null, verification_status:'osm_seeded', osm_timestamp:el.timestamp||null, ingested_at:new Date().toISOString(), tags:t
@@ -206,14 +237,15 @@ async function loadStateLive() {
     const response = await fetch('https://overpass-api.de/api/interpreter', { method:'POST', headers:{'content-type':'application/x-www-form-urlencoded;charset=UTF-8'}, body:new URLSearchParams({data:liveQuery(st)}) });
     if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
     const json=await response.json();
-    const features=(json.elements||[]).map(el=>normalizeLive(el,st)).filter(Boolean);
+    const elements=json.elements||[];
+    const features=elements.map(el=>normalizeLive(el,st)).filter(Boolean);
+    const excluded=elements.length-features.length;
     mergeFeatures(features); state.liveLoaded.add(st);
-    document.querySelector('#notice').textContent=`Loaded ${features.length.toLocaleString()} OSM skatepark candidates for US-${st}. Live mode is for development; use the refresh script for a production snapshot.`;
+    document.querySelector('#notice').textContent=`Loaded ${features.length.toLocaleString()} classified OSM skate-location candidates for US-${st}; quarantined ${excluded.toLocaleString()} non-facility candidate(s). Live mode is for development; use the governed refresh for production.`;
   } catch (error) {
-    document.querySelector('#notice').textContent=`Live query failed: ${error.message}. Public Overpass instances can shed load; try again later or run the refresh script locally.`;
+    document.querySelector('#notice').textContent=`Live query failed: ${error.message}. Public Overpass instances can shed load; try again later or use the governed refresh workflow.`;
   } finally { btn.disabled=false; btn.textContent=before; }
 }
-
 
 function findNearMe() {
   const notice = document.querySelector('#notice');
@@ -229,7 +261,7 @@ function findNearMe() {
     if (state.userMarker) state.userMarker.remove();
     state.userMarker = new maplibregl.Marker().setLngLat(coords).addTo(map);
     map.easeTo({ center:coords, zoom:10 });
-    notice.textContent = 'Location found. Parks in the sidebar are now sorted by straight-line distance from you within the current map view.';
+    notice.textContent = 'Location found. Source candidates in the sidebar are now sorted by straight-line distance from you within the current map view.';
     renderSidebar();
     btn.disabled=false; btn.textContent=before;
   }, err => {
