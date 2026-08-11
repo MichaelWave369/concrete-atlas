@@ -152,6 +152,24 @@ function normalize(el, state, generatedAt) {
   };
 }
 
+function reclassifyRetainedFeature(feature) {
+  const p = feature?.properties;
+  if (!p) return null;
+  const tags = p.tags || {};
+  const classification = classifyCandidate(tags, p.name || '');
+  if (!classification.include) return null;
+  return {
+    ...feature,
+    properties: {
+      ...p,
+      matched_by: matchTags(tags),
+      candidate_kind: classification.kind,
+      candidate_confidence: classification.confidence,
+      candidate_reason: classification.reason
+    }
+  };
+}
+
 function retryAfterMs(response) {
   const raw = response.headers.get('retry-after');
   if (!raw) return retryDelayMs;
@@ -256,12 +274,16 @@ try {
 } catch {
   // First bootstrap or unreadable prior snapshot: nothing to retain.
 }
+
 const previousByState = new Map();
 for (const feature of previousFeatures) {
   const st = feature?.properties?.source_state;
-  if (!st) continue;
-  if (!previousByState.has(st)) previousByState.set(st, []);
-  previousByState.get(st).push(feature);
+  if (!st || !STATES.includes(st)) continue;
+  if (!previousByState.has(st)) previousByState.set(st, { features: [], excluded_non_facility_count: 0 });
+  const bucket = previousByState.get(st);
+  const upgraded = reclassifyRetainedFeature(feature);
+  if (upgraded) bucket.features.push(upgraded);
+  else bucket.excluded_non_facility_count += 1;
 }
 
 for (const [i, state] of STATES.entries()) {
@@ -285,10 +307,16 @@ for (const [i, state] of STATES.entries()) {
     const supplementNote = includeSupplemental && result.receipt.supplemental_error ? ' (supplement unavailable)' : '';
     console.log(`${accepted} accepted, ${excluded} excluded; ${byId.size} unique total${supplementNote}`);
   } catch (error) {
-    const retained = previousByState.get(state) || [];
-    for (const feature of retained) byId.set(feature.properties.source_id, feature);
-    failures.push({ state, error: error.message, retained_feature_count: retained.length });
-    console.log(`FAILED: ${error.message}; retained ${retained.length} prior feature(s)`);
+    const retained = previousByState.get(state) || { features: [], excluded_non_facility_count: 0 };
+    for (const feature of retained.features) byId.set(feature.properties.source_id, feature);
+    excludedNonFacilityCount += retained.excluded_non_facility_count;
+    failures.push({
+      state,
+      error: error.message,
+      retained_feature_count: retained.features.length,
+      retained_excluded_non_facility_count: retained.excluded_non_facility_count
+    });
+    console.log(`FAILED: ${error.message}; retained ${retained.features.length} prior feature(s), excluded ${retained.excluded_non_facility_count} prior non-facility candidate(s)`);
   }
   if (i < STATES.length - 1) await sleep(pauseMs);
 }
