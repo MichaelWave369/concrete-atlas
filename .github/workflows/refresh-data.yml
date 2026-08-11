@@ -36,11 +36,12 @@ jobs:
           - id: 5
             states: TN,TX,UT,VT,VA,WA,WV,WI,WY,DC
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
+          package-manager-cache: false
 
       - name: Check ingestion scripts
         run: |
@@ -70,7 +71,7 @@ jobs:
       - name: Preserve chunk
         run: cp data/skateparks.geojson "chunk-${{ matrix.id }}.geojson"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: skatepark-chunk-${{ matrix.id }}
           path: chunk-${{ matrix.id }}.geojson
@@ -82,13 +83,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
+          package-manager-cache: false
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: skatepark-chunk-*
           path: partials
