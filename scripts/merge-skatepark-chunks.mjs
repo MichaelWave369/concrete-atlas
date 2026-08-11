@@ -20,13 +20,17 @@ if (!files.length) throw new Error(`No GeoJSON chunk files found beneath ${root}
 
 const byId = new Map();
 const failedStates = [];
+const stateSources = [];
 const requestedStates = new Set();
+const freshnessPolicies = new Set();
 let newestGeneratedAt = null;
 for (const file of files) {
   const data = JSON.parse(await readFile(file, 'utf8'));
   if (data.type !== 'FeatureCollection' || !Array.isArray(data.features)) throw new Error(`${file} is not a FeatureCollection`);
   for (const state of data.metadata?.requested_states || []) requestedStates.add(state);
   for (const failure of data.metadata?.failed_states || []) failedStates.push(failure);
+  for (const receipt of data.metadata?.state_sources || []) stateSources.push(receipt);
+  if (data.metadata?.source_freshness_policy_hours != null) freshnessPolicies.add(data.metadata.source_freshness_policy_hours);
   if (data.metadata?.generated_at && (!newestGeneratedAt || data.metadata.generated_at > newestGeneratedAt)) newestGeneratedAt = data.metadata.generated_at;
   for (const feature of data.features) {
     const id = feature?.properties?.source_id;
@@ -42,6 +46,8 @@ const features = [...byId.values()].sort((a, b) =>
 );
 const failuresByState = new Map();
 for (const failure of failedStates) failuresByState.set(failure.state, failure);
+const sourcesByState = new Map();
+for (const receipt of stateSources) sourcesByState.set(receipt.state, receipt);
 
 const collection = {
   type: 'FeatureCollection',
@@ -54,7 +60,9 @@ const collection = {
     requested_states: [...requestedStates].sort(),
     feature_count: features.length,
     failed_states: [...failuresByState.values()].sort((a,b) => a.state.localeCompare(b.state)),
-    query_tags: ['leisure=skate_park', 'sport includes skateboard'],
+    state_sources: [...sourcesByState.values()].sort((a,b) => a.state.localeCompare(b.state)),
+    source_freshness_policy_hours: freshnessPolicies.size === 1 ? [...freshnessPolicies][0] : [...freshnessPolicies].sort((a,b) => a-b),
+    query_tags: ['sport includes skateboard (primary)', 'leisure=skate_park (supplemental)', 'leisure=skatepark (supplemental)'],
     merge: { chunk_count: files.length, deduplicated_by: 'source_id' }
   },
   features
@@ -62,4 +70,4 @@ const collection = {
 
 await writeFile(output, JSON.stringify(collection, null, 2) + '\n', 'utf8');
 console.log(`Merged ${files.length} chunks into ${features.length} unique skatepark features.`);
-console.log(`Coverage: ${requestedStates.size} state/DC codes; failures: ${failuresByState.size}.`);
+console.log(`Coverage: ${requestedStates.size} state/DC codes; failures: ${failuresByState.size}; source receipts: ${sourcesByState.size}.`);
