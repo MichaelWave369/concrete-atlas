@@ -11,15 +11,15 @@ permissions:
 
 concurrency:
   group: concrete-atlas-current-bootstrap
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   fetch-chunks:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 18
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 2
       matrix:
         include:
           - id: 1
@@ -46,14 +46,15 @@ jobs:
           node --check scripts/fetch-osm-skateparks.mjs
           node --check scripts/merge-skatepark-chunks.mjs
 
-      - name: Fetch fresh state chunk
+      - name: Fetch fresh primary state chunk
         id: refresh
         env:
           STATE_CODES: ${{ matrix.states }}
           OVERPASS_ENDPOINTS: https://overpass-api.de/api/interpreter,https://lz4.overpass-api.de/api/interpreter,https://z.overpass-api.de/api/interpreter
-          OVERPASS_TIMEOUT_SECONDS: "12"
-          OVERPASS_DELAY_MS: "400"
+          OVERPASS_TIMEOUT_SECONDS: "20"
+          OVERPASS_DELAY_MS: "1500"
           MAX_SOURCE_LAG_HOURS: "72"
+          INCLUDE_SUPPLEMENTAL: "false"
         run: npm run refresh:data
         continue-on-error: true
 
