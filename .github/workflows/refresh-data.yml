@@ -2,26 +2,53 @@ name: Refresh skatepark data
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/refresh-data.yml"
   schedule:
     - cron: "17 9 1,15 * *"
 
 permissions:
   contents: write
 
+concurrency:
+  group: concrete-atlas-data-refresh
+  cancel-in-progress: false
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Refresh OpenStreetMap snapshot
+        id: refresh
         run: npm run refresh:data
         continue-on-error: true
+
       - name: Validate snapshot
         run: npm run validate:data
+
+      - name: Summarize coverage
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('data/skateparks.geojson', 'utf8'));
+          const count = data.features?.length ?? 0;
+          const failures = data.metadata?.failed_states ?? [];
+          console.log(`Skateparks: ${count}`);
+          console.log(`Failed states: ${failures.length}`);
+          if (failures.length) {
+            console.log(`::warning::Partial OSM refresh: ${failures.map(x => x.state).join(', ')}`);
+          }
+          NODE
+
       - name: Commit changed snapshot
         run: |
           if git diff --quiet -- data/skateparks.geojson; then
@@ -33,3 +60,7 @@ jobs:
           git add data/skateparks.geojson
           git commit -m "data: refresh OSM skatepark snapshot"
           git push
+
+      - name: Report refresh outcome
+        if: steps.refresh.outcome == 'failure'
+        run: echo "::warning::Refresh completed with one or more state failures; committed snapshot retains failed-state metadata for auditability."
