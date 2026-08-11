@@ -20,7 +20,9 @@ jobs:
           node-version: 22
 
       - name: Check browser JavaScript syntax
-        run: node --check assets/app.js
+        run: |
+          node --check assets/app.js
+          node --check assets/quality.js
 
       - name: Check importer syntax
         run: node --check scripts/fetch-osm-skateparks.mjs
