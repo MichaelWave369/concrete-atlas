@@ -1,4 +1,4 @@
-# Concrete Atlas v0.1.0
+# Concrete Atlas v0.1.1
 
 **The living map of American skateboarding.**
 
@@ -6,24 +6,30 @@ Public, open-source, and provenance-aware: the application software is MIT-licen
 
 Concrete Atlas is a static-first interactive U.S. skatepark atlas. It uses MapLibre GL JS for the map, OpenFreeMap for the basemap, and OpenStreetMap/Overpass as the initial nationwide data seed.
 
-## v0.1.0 capabilities
+## v0.1.1 capabilities
 
 - U.S.-wide interactive map shell
 - MapLibre point clustering
 - Search by park/city/operator
 - State, surface, indoor/outdoor, and verification filters
 - Park detail drawer with provenance
+- Find Near Me with distance-sorted nearby park results
+- Viewport-aware sidebar results
+- Shareable park hash URLs
 - OSM object ID + source URL retained for every imported record
 - State-by-state nationwide OSM ingestion
-- Two Overpass endpoint fallback strategy
+- Freshness-governed Overpass endpoint fallback
+- Per-state source receipts with OSM base timestamp and endpoint provenance
 - Static GeoJSON snapshot suitable for Netlify
 - Optional single-state live Overpass query for development
 - Verification field separated from source ingestion
 - GitHub Action for manual or twice-monthly snapshot refresh
+- Partial refreshes retain prior state data instead of silently dropping it
+- Validator rejects duplicate source IDs and feature-count drift
 
 ## Why the importer is state-by-state
 
-Concrete Atlas does **not** use public Overpass as a high-traffic production backend. The refresh script makes a small, finite set of state-level queries and stores the results as a static GeoJSON snapshot. This is friendlier to shared public infrastructure and makes the site faster and more reliable for visitors.
+Concrete Atlas does **not** use public Overpass as a high-traffic production backend. The refresh workflow makes a finite set of state-level queries, runs at most two chunk workers at once, and stores the result as a static GeoJSON snapshot. This keeps visitor traffic off shared Overpass infrastructure and gives the project an auditable state-by-state coverage record.
 
 ## First run
 
@@ -45,12 +51,12 @@ This project is intentionally static. `netlify.toml` publishes the repository ro
 
 Recommended release flow:
 
-1. Run `npm run refresh:data` locally.
+1. Refresh the nationwide snapshot with the GitHub Action or `npm run refresh:data`.
 2. Run `npm run validate:data`.
-3. Commit the generated `data/skateparks.geojson`.
+3. Commit `data/skateparks.geojson`.
 4. Deploy the repository to Netlify.
 
-That keeps data ingestion out of the Netlify build and avoids spending deploy/build resources just to test OSM queries.
+Data ingestion is kept separate from normal visitor requests and front-end rendering.
 
 ## Data model
 
@@ -59,6 +65,7 @@ Every feature keeps a `source_id` such as `osm:way/1234567`, plus:
 - source / source state
 - OSM object type and ID
 - OSM URL
+- source match tags
 - name and address tags
 - surface
 - indoor / lit / covered
@@ -71,14 +78,26 @@ Every feature keeps a `source_id` such as `osm:way/1234567`, plus:
 
 The initial status is `osm_seeded`. Future community verification should promote a park to a distinct status rather than overwriting source history.
 
-## OSM query coverage
+## OSM query policy
 
-For each state + D.C., the importer queries objects that match either:
+The canonical primary pass queries each state + D.C. for `sport` values containing `skateboard`. That primary pass is what determines whether a state refresh succeeded.
+
+Optional enrichment can additionally query:
 
 - `leisure=skate_park`
-- `sport` containing `skateboard`
+- `leisure=skatepark`
 
-This intentionally favors recall over perfect classification. Later governance passes can separate skateparks, plazas, indoor facilities, DIY parks, mixed-use wheel parks, and probable false positives.
+Supplemental enrichment is deliberately non-blocking. If an enrichment query is unavailable or rate-limited, the primary skateboarding dataset remains valid and the enrichment failure is recorded instead of failing the state.
+
+## Source freshness receipts
+
+A successful endpoint response records its reported OSM base timestamp, areas timestamp when available, endpoint URL, source lag, and element count. Responses older than the configured freshness policy are rejected and the importer tries the next endpoint.
+
+The generated snapshot includes per-state source receipts in metadata. This makes mixed-source refreshes visible instead of silently treating every endpoint response as equivalent.
+
+## Partial refresh behavior
+
+If a primary state-level query fails during a later refresh, Concrete Atlas retains that state's last known snapshot records instead of deleting them. The failed state and number of retained records are written into snapshot metadata so partial coverage stays visible and auditable.
 
 ## Production scaling path
 

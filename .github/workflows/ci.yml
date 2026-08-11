@@ -1,0 +1,35 @@
+name: Concrete Atlas CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check browser JavaScript syntax
+        run: node --check assets/app.js
+
+      - name: Check importer syntax
+        run: node --check scripts/fetch-osm-skateparks.mjs
+
+      - name: Check chunk merger syntax
+        run: node --check scripts/merge-skatepark-chunks.mjs
+
+      - name: Check validator syntax
+        run: node --check scripts/validate-geojson.mjs
+
+      - name: Validate bundled GeoJSON snapshot
+        run: npm run validate:data
