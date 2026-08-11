@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { setTimeout as sleep } from 'node:timers/promises';
 
 const STATES = [
@@ -115,6 +115,20 @@ async function fetchState(state) {
 const generatedAt = new Date().toISOString();
 const byId = new Map();
 const failures = [];
+let previousFeatures = [];
+try {
+  const previous = JSON.parse(await readFile(outputPath, 'utf8'));
+  if (previous?.type === 'FeatureCollection' && Array.isArray(previous.features)) previousFeatures = previous.features;
+} catch {
+  // First bootstrap or unreadable prior snapshot: nothing to retain.
+}
+const previousByState = new Map();
+for (const feature of previousFeatures) {
+  const st = feature?.properties?.source_state;
+  if (!st) continue;
+  if (!previousByState.has(st)) previousByState.set(st, []);
+  previousByState.get(st).push(feature);
+}
 
 for (const [i, state] of STATES.entries()) {
   process.stdout.write(`[${i + 1}/${STATES.length}] US-${state} ... `);
@@ -129,8 +143,10 @@ for (const [i, state] of STATES.entries()) {
     }
     console.log(`${accepted} returned; ${byId.size} unique total`);
   } catch (error) {
-    failures.push({ state, error: error.message });
-    console.log(`FAILED: ${error.message}`);
+    const retained = previousByState.get(state) || [];
+    for (const feature of retained) byId.set(feature.properties.source_id, feature);
+    failures.push({ state, error: error.message, retained_feature_count: retained.length });
+    console.log(`FAILED: ${error.message}; retained ${retained.length} prior feature(s)`);
   }
   if (i < STATES.length - 1) await sleep(pauseMs);
 }
@@ -144,12 +160,13 @@ const collection = {
   type: 'FeatureCollection',
   metadata: {
     project: 'Concrete Atlas',
-    version: '0.1.0',
+    version: '0.1.1',
     generated_at: generatedAt,
     source: 'OpenStreetMap via Overpass API',
     coverage: '50 U.S. states plus District of Columbia',
     feature_count: features.length,
     failed_states: failures,
+    retained_failed_state_features: failures.reduce((sum, x) => sum + (x.retained_feature_count || 0), 0),
     query_tags: ['leisure=skate_park', 'sport includes skateboard']
   },
   features
