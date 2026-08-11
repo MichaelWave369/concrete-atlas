@@ -12,8 +12,9 @@ for (const state of STATES) {
 
 const endpoints = (process.env.OVERPASS_ENDPOINTS || 'https://overpass-api.de/api/interpreter,https://lz4.overpass-api.de/api/interpreter,https://z.overpass-api.de/api/interpreter')
   .split(',').map(v => v.trim()).filter(Boolean);
-const pauseMs = Number(process.env.OVERPASS_DELAY_MS || 1500);
+const pauseMs = Number(process.env.OVERPASS_DELAY_MS || 2500);
 const timeoutSeconds = Number(process.env.OVERPASS_TIMEOUT_SECONDS || 20);
+const retryDelayMs = Number(process.env.OVERPASS_RETRY_DELAY_MS || 15000);
 const maxSourceLagHours = Number(process.env.MAX_SOURCE_LAG_HOURS || 72);
 const includeSupplemental = /^(1|true|yes)$/i.test(process.env.INCLUDE_SUPPLEMENTAL || 'false');
 const outputPath = new URL('../data/skateparks.geojson', import.meta.url);
@@ -151,45 +152,65 @@ function normalize(el, state, generatedAt) {
   };
 }
 
+function retryAfterMs(response) {
+  const raw = response.headers.get('retry-after');
+  if (!raw) return retryDelayMs;
+  const seconds = Number(raw);
+  if (Number.isFinite(seconds)) return Math.max(retryDelayMs, seconds * 1000);
+  const date = Date.parse(raw);
+  if (Number.isFinite(date)) return Math.max(retryDelayMs, date - Date.now());
+  return retryDelayMs;
+}
+
 async function fetchQuery(state, kind, query) {
   let lastError;
   for (const endpoint of endpoints) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), (timeoutSeconds + 7) * 1000);
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
-          accept: 'application/json',
-          'user-agent': 'ConcreteAtlas/0.1.2 (nationwide skatepark dataset refresh)'
-        },
-        body: new URLSearchParams({ data: query }),
-        signal: controller.signal
-      });
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      const json = await response.json();
-      const osmBase = json.osm3s?.timestamp_osm_base || null;
-      const lagHours = sourceLagHours(osmBase);
-      if (lagHours != null && lagHours > maxSourceLagHours) {
-        throw new Error(`stale OSM base ${osmBase} (${lagHours.toFixed(1)}h lag > ${maxSourceLagHours}h policy)`);
-      }
-      return {
-        elements: json.elements || [],
-        receipt: {
-          kind,
-          endpoint,
-          osm_base: osmBase,
-          areas_base: json.osm3s?.timestamp_areas_base || null,
-          source_lag_hours: lagHours == null ? null : Number(lagHours.toFixed(2)),
-          element_count: (json.elements || []).length
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), (timeoutSeconds + 7) * 1000);
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            accept: 'application/json',
+            'user-agent': 'ConcreteAtlas/0.1.2 (nationwide skatepark dataset refresh)'
+          },
+          body: new URLSearchParams({ data: query }),
+          signal: controller.signal
+        });
+        if (response.status === 429 && attempt < 2) {
+          const delay = retryAfterMs(response);
+          console.warn(`[${state}] ${kind} ${endpoint} rate limited; backing off ${Math.ceil(delay / 1000)}s before retry`);
+          await sleep(delay);
+          continue;
         }
-      };
-    } catch (error) {
-      lastError = error;
-      console.warn(`[${state}] ${kind} ${endpoint} failed: ${error.message}`);
-    } finally {
-      clearTimeout(timer);
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const json = await response.json();
+        const osmBase = json.osm3s?.timestamp_osm_base || null;
+        const lagHours = sourceLagHours(osmBase);
+        if (lagHours != null && lagHours > maxSourceLagHours) {
+          throw new Error(`stale OSM base ${osmBase} (${lagHours.toFixed(1)}h lag > ${maxSourceLagHours}h policy)`);
+        }
+        return {
+          elements: json.elements || [],
+          receipt: {
+            kind,
+            endpoint,
+            osm_base: osmBase,
+            areas_base: json.osm3s?.timestamp_areas_base || null,
+            source_lag_hours: lagHours == null ? null : Number(lagHours.toFixed(2)),
+            element_count: (json.elements || []).length,
+            attempts: attempt
+          }
+        };
+      } catch (error) {
+        lastError = error;
+        console.warn(`[${state}] ${kind} ${endpoint} attempt ${attempt} failed: ${error.message}`);
+        break;
+      } finally {
+        clearTimeout(timer);
+      }
     }
   }
   throw lastError || new Error(`No Overpass endpoint succeeded for ${state} ${kind}`);
