@@ -11,10 +11,10 @@
 <body>
   <main class="app">
     <header class="topbar">
-      <div class="brand"><div class="logo">CA</div><div><h1>CONCRETE ATLAS</h1><p>The living map of American skateboarding · v0.1.1</p></div></div>
+      <div class="brand"><div class="logo">CA</div><div><h1>CONCRETE ATLAS</h1><p>The living map of American skateboarding · v0.1.2</p></div></div>
       <div class="stats">
-        <span class="badge"><strong id="count-all">0</strong> parks loaded</span>
-        <span class="badge"><strong id="count-visible">0</strong> visible</span>
+        <span class="badge"><strong id="count-all">0</strong> source candidates</span>
+        <span class="badge"><strong id="count-visible">0</strong> map matches</span>
         <span class="badge">snapshot <strong id="snapshot">none</strong></span>
       </div>
     </header>
@@ -26,15 +26,15 @@
       <div class="field"><label for="environment">Environment</label><select id="environment"><option value="">Indoor + outdoor</option><option value="outdoor">Outdoor</option><option value="indoor">Indoor</option></select></div>
       <div class="field"><label for="verification">Verification</label><select id="verification"><option value="">Any status</option><option value="osm">OSM seeded</option><option value="verified">Community verified</option></select></div>
       <button class="action primary" id="load-live" type="button">Load selected state live</button>
-      <button class="action" id="fit" type="button">Fit visible parks</button>
+      <button class="action" id="fit" type="button">Fit map matches</button>
       <button class="action" id="near-me" type="button">Find near me</button>
     </section>
 
     <section class="workspace">
-      <div id="map" aria-label="Interactive map of U.S. skateparks"></div>
-      <aside class="sidebar"><h2>Visible parks</h2><div class="help">The first 80 matching parks in the current map view appear here. Use Find near me to center the map and sort nearby parks by distance.</div><div id="park-list"></div></aside>
-      <section class="drawer" id="drawer" aria-live="polite"><div class="drawer-head"><h3 id="drawer-title">Park</h3><button class="close" id="drawer-close" type="button" aria-label="Close park details">×</button></div><div id="drawer-body"></div></section>
-      <div class="notice" id="notice">Data seed: OpenStreetMap. OSM records are leads, not guarantees; community verification is intentionally separate. © OpenStreetMap contributors, ODbL.</div>
+      <div id="map" aria-label="Interactive map of U.S. skatepark candidates"></div>
+      <aside class="sidebar"><h2>Visible skate locations</h2><div class="help">The first 80 matching source candidates in the current map view appear here. Use Find near me to center the map and sort nearby locations by distance. OSM-seeded candidates are not community verification.</div><div id="park-list"></div></aside>
+      <section class="drawer" id="drawer" aria-live="polite"><div class="drawer-head"><h3 id="drawer-title">Skate location</h3><button class="close" id="drawer-close" type="button" aria-label="Close location details">×</button></div><div id="drawer-body"></div></section>
+      <div class="notice" id="notice">Data seed: OpenStreetMap. Source candidates are leads, not guarantees; community verification is intentionally separate. © OpenStreetMap contributors, ODbL.</div>
     </section>
   </main>
   <script src="https://unpkg.com/maplibre-gl@6.3.0/dist/maplibre-gl.js"></script>
