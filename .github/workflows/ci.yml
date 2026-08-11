@@ -25,6 +25,9 @@ jobs:
       - name: Check importer syntax
         run: node --check scripts/fetch-osm-skateparks.mjs
 
+      - name: Check chunk merger syntax
+        run: node --check scripts/merge-skatepark-chunks.mjs
+
       - name: Check validator syntax
         run: node --check scripts/validate-geojson.mjs
 
