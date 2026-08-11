@@ -5,10 +5,10 @@ const STATES = [
   'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'
 ];
 
-const endpoints = (process.env.OVERPASS_ENDPOINTS || 'https://overpass-api.de/api/interpreter,https://overpass.private.coffee/api/interpreter')
+const endpoints = (process.env.OVERPASS_ENDPOINTS || 'https://overpass.private.coffee/api/interpreter,https://overpass-api.de/api/interpreter')
   .split(',').map(v => v.trim()).filter(Boolean);
-const pauseMs = Number(process.env.OVERPASS_DELAY_MS || 1800);
-const timeoutSeconds = Number(process.env.OVERPASS_TIMEOUT_SECONDS || 120);
+const pauseMs = Number(process.env.OVERPASS_DELAY_MS || 900);
+const timeoutSeconds = Number(process.env.OVERPASS_TIMEOUT_SECONDS || 45);
 const outputPath = new URL('../data/skateparks.geojson', import.meta.url);
 
 function queryFor(state) {
@@ -89,7 +89,7 @@ async function fetchState(state) {
   for (const endpoint of endpoints) {
     try {
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), (timeoutSeconds + 20) * 1000);
+      const timer = setTimeout(() => controller.abort(), (timeoutSeconds + 10) * 1000);
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
