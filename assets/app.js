@@ -10,7 +10,9 @@ const state = {
   all: { type:'FeatureCollection', features:[] },
   filtered: { type:'FeatureCollection', features:[] },
   metadata: {},
-  liveLoaded: new Set()
+  liveLoaded: new Set(),
+  userLocation: null,
+  userMarker: null
 };
 
 const map = new maplibregl.Map({
@@ -25,6 +27,26 @@ map.addControl(new maplibregl.NavigationControl(), 'top-left');
 function esc(v='') { return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function valueOr(v, fallback='Unknown') { return v == null || v === '' ? fallback : v; }
 function yesNo(v) { return v === true ? 'Yes' : v === false ? 'No' : 'Unknown'; }
+function distanceKm(a, b) {
+  const toRad = d => d * Math.PI / 180;
+  const [lng1, lat1] = a; const [lng2, lat2] = b;
+  const dLat = toRad(lat2 - lat1); const dLng = toRad(lng2 - lng1);
+  const x = Math.sin(dLat/2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
+}
+function distanceLabel(km) {
+  const miles = km * 0.621371;
+  return miles < 10 ? `${miles.toFixed(1)} mi` : `${Math.round(miles)} mi`;
+}
+function featureFromHash() {
+  const raw = new URLSearchParams(location.hash.replace(/^#/, '')).get('park');
+  if (!raw) return null;
+  return state.all.features.find(f => f.properties?.source_id === raw) || null;
+}
+function openParkFromHash() {
+  const f = featureFromHash();
+  if (f) openPark(f, { syncHash:false });
+}
 function addMapLayers() {
   if (map.getSource('parks')) return;
   map.addSource('parks', { type:'geojson', data:state.filtered, cluster:true, clusterMaxZoom:11, clusterRadius:52 });
@@ -87,7 +109,16 @@ function renderStats() {
 
 function renderSidebar() {
   const wrap = document.querySelector('#park-list');
-  const list = state.filtered.features.slice(0, 80);
+  let candidates = state.filtered.features;
+  if (map.loaded()) {
+    const bounds = map.getBounds();
+    const inView = candidates.filter(f => bounds.contains(f.geometry.coordinates));
+    if (inView.length) candidates = inView;
+  }
+  if (state.userLocation) {
+    candidates = candidates.map(f => ({ f, d:distanceKm(state.userLocation, f.geometry.coordinates) })).sort((a,b)=>a.d-b.d).map(x => ({...x.f, _distanceKm:x.d}));
+  }
+  const list = candidates.slice(0, 80);
   if (!list.length) {
     wrap.innerHTML = `<div class="empty">No parks match the current view. If this source package has no bundled snapshot yet, choose a state and press <strong>Load selected state live</strong>, or run <code>npm run refresh:data</code> once to build the full U.S. snapshot.</div>`;
     return;
@@ -97,12 +128,13 @@ function renderSidebar() {
     if (p.surface) labels.push(`<span class="chip">${esc(p.surface)}</span>`);
     if (p.lit===true) labels.push(`<span class="chip accent">lights</span>`);
     if (p.indoor===true) labels.push(`<span class="chip">indoor</span>`);
+    if (Number.isFinite(f._distanceKm)) labels.unshift(`<span class="chip accent">${distanceLabel(f._distanceKm)}</span>`);
     return `<div class="park-card"><button data-index="${i}"><div class="park-name">${esc(p.name)}</div><div class="park-meta">${esc(p.city || p.source_state || '')}${p.address ? `<br>${esc(p.address)}`:''}</div><div class="chips">${labels.join('')}</div></button></div>`;
   }).join('');
   [...wrap.querySelectorAll('button')].forEach(btn => btn.addEventListener('click', () => openPark(list[Number(btn.dataset.index)])));
 }
 
-function openPark(feature) {
+function openPark(feature, { syncHash=true } = {}) {
   const p = feature.properties || {};
   const drawer = document.querySelector('#drawer');
   document.querySelector('#drawer-title').textContent = p.name || 'Unnamed skatepark';
@@ -129,6 +161,7 @@ function openPark(feature) {
       <dt>Ingested</dt><dd>${esc(valueOr(p.ingested_at))}</dd>
     </dl>`;
   drawer.classList.add('open');
+  if (syncHash && p.source_id) history.replaceState(null, '', `#${new URLSearchParams({park:p.source_id})}`);
   const c = feature.geometry?.coordinates;
   if (c) map.easeTo({center:c, zoom:Math.max(map.getZoom(),12)});
 }
@@ -140,6 +173,9 @@ async function loadSnapshot() {
     const json = await res.json();
     state.metadata = json.metadata || {};
     mergeFeatures(json.features || []);
+    openParkFromHash();
+    const failed = state.metadata.failed_states || [];
+    if (failed.length) document.querySelector('#notice').textContent = `Snapshot loaded with partial coverage: ${failed.length} state(s) failed the latest refresh (${failed.map(x=>x.state).join(', ')}). OSM records remain leads, not guarantees.`;
   } catch (error) {
     console.warn('Snapshot unavailable', error);
   }
@@ -178,10 +214,37 @@ async function loadStateLive() {
   } finally { btn.disabled=false; btn.textContent=before; }
 }
 
+
+function findNearMe() {
+  const notice = document.querySelector('#notice');
+  if (!navigator.geolocation) {
+    notice.textContent = 'This browser does not expose geolocation. You can still search by city or state.';
+    return;
+  }
+  const btn = document.querySelector('#near-me');
+  btn.disabled = true; const before = btn.textContent; btn.textContent = 'Locating…';
+  navigator.geolocation.getCurrentPosition(pos => {
+    const coords = [pos.coords.longitude, pos.coords.latitude];
+    state.userLocation = coords;
+    if (state.userMarker) state.userMarker.remove();
+    state.userMarker = new maplibregl.Marker().setLngLat(coords).addTo(map);
+    map.easeTo({ center:coords, zoom:10 });
+    notice.textContent = 'Location found. Parks in the sidebar are now sorted by straight-line distance from you within the current map view.';
+    renderSidebar();
+    btn.disabled=false; btn.textContent=before;
+  }, err => {
+    notice.textContent = `Could not use your location: ${err.message}. Search by city or state instead.`;
+    btn.disabled=false; btn.textContent=before;
+  }, { enableHighAccuracy:false, timeout:10000, maximumAge:300000 });
+}
+
 map.on('load', async () => { addMapLayers(); await loadSnapshot(); applyFilters(); });
+map.on('moveend', renderSidebar);
 for (const id of ['search','state','surface','environment','verification']) document.querySelector(`#${id}`).addEventListener(id==='search'?'input':'change', applyFilters);
 document.querySelector('#load-live').addEventListener('click', loadStateLive);
-document.querySelector('#drawer-close').addEventListener('click', () => document.querySelector('#drawer').classList.remove('open'));
+document.querySelector('#near-me').addEventListener('click', findNearMe);
+window.addEventListener('hashchange', openParkFromHash);
+document.querySelector('#drawer-close').addEventListener('click', () => { document.querySelector('#drawer').classList.remove('open'); history.replaceState(null, '', location.pathname + location.search); });
 document.querySelector('#fit').addEventListener('click', () => {
   const fs=state.filtered.features; if (!fs.length) return;
   const bounds=new maplibregl.LngLatBounds(); fs.forEach(f=>bounds.extend(f.geometry.coordinates)); map.fitBounds(bounds,{padding:70,maxZoom:11});
