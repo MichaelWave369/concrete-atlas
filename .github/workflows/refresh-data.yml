@@ -47,7 +47,7 @@ jobs:
           node --check scripts/fetch-osm-skateparks.mjs
           node --check scripts/merge-skatepark-chunks.mjs
 
-      - name: Fetch fresh primary state chunk
+      - name: Fetch classified fresh primary state chunk
         id: refresh
         env:
           STATE_CODES: ${{ matrix.states }}
@@ -56,6 +56,7 @@ jobs:
           OVERPASS_DELAY_MS: "1500"
           MAX_SOURCE_LAG_HOURS: "72"
           INCLUDE_SUPPLEMENTAL: "false"
+          CLASSIFIER_POLICY_VERSION: "0.1"
         run: npm run refresh:data
         continue-on-error: true
 
@@ -102,7 +103,9 @@ jobs:
           const data = JSON.parse(fs.readFileSync('data/skateparks.geojson', 'utf8'));
           const failures = data.metadata?.failed_states || [];
           const receipts = data.metadata?.state_sources || [];
-          console.log(`Skateparks: ${data.features?.length || 0}`);
+          const excluded = data.metadata?.excluded_non_facility_count || 0;
+          console.log(`Skate candidates: ${data.features?.length || 0}`);
+          console.log(`Excluded non-facility candidates: ${excluded}`);
           console.log(`State/DC codes requested: ${data.metadata?.requested_states?.length || 0}`);
           console.log(`Fresh state receipts: ${receipts.length}`);
           console.log(`Failed primary states: ${failures.length}`);
@@ -120,5 +123,5 @@ jobs:
           git config user.name "concrete-atlas-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/skateparks.geojson
-          git commit -m "data: refresh OSM skatepark snapshot"
+          git commit -m "data: refresh classified OSM skatepark snapshot"
           git push
