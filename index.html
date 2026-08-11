@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Concrete Atlas — a living map of skateparks across the United States." />
+  <title>Concrete Atlas — U.S. Skatepark Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.3.0/dist/maplibre-gl.css" />
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><div class="logo">CA</div><div><h1>CONCRETE ATLAS</h1><p>The living map of American skateboarding · v0.1.0</p></div></div>
+      <div class="stats">
+        <span class="badge"><strong id="count-all">0</strong> parks loaded</span>
+        <span class="badge"><strong id="count-visible">0</strong> visible</span>
+        <span class="badge">snapshot <strong id="snapshot">none</strong></span>
+      </div>
+    </header>
+
+    <section class="controls" aria-label="Map filters">
+      <div class="field"><label for="search">Search</label><input id="search" type="search" placeholder="Park, city, operator…" /></div>
+      <div class="field"><label for="state">State</label><select id="state"></select></div>
+      <div class="field"><label for="surface">Surface</label><select id="surface"><option value="">Any surface</option><option value="concrete">Concrete only</option><option value="known">Known surface</option></select></div>
+      <div class="field"><label for="environment">Environment</label><select id="environment"><option value="">Indoor + outdoor</option><option value="outdoor">Outdoor</option><option value="indoor">Indoor</option></select></div>
+      <div class="field"><label for="verification">Verification</label><select id="verification"><option value="">Any status</option><option value="osm">OSM seeded</option><option value="verified">Community verified</option></select></div>
+      <button class="action primary" id="load-live" type="button">Load selected state live</button>
+      <button class="action" id="fit" type="button">Fit visible parks</button>
+    </section>
+
+    <section class="workspace">
+      <div id="map" aria-label="Interactive map of U.S. skateparks"></div>
+      <aside class="sidebar"><h2>Visible parks</h2><div class="help">The first 80 matching parks appear here. Click a park on the map or list to open its source and verification record.</div><div id="park-list"></div></aside>
+      <section class="drawer" id="drawer" aria-live="polite"><div class="drawer-head"><h3 id="drawer-title">Park</h3><button class="close" id="drawer-close" type="button" aria-label="Close park details">×</button></div><div id="drawer-body"></div></section>
+      <div class="notice" id="notice">Data seed: OpenStreetMap. OSM records are leads, not guarantees; community verification is intentionally separate. © OpenStreetMap contributors, ODbL.</div>
+    </section>
+  </main>
+  <script src="https://unpkg.com/maplibre-gl@6.3.0/dist/maplibre-gl.js"></script>
+  <script src="./assets/app.js"></script>
+</body>
+</html>

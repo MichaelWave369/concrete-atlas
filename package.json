@@ -1,0 +1,14 @@
+{
+  "name": "concrete-atlas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A living map of skateparks across the United States.",
+  "scripts": {
+    "serve": "python -m http.server 4173",
+    "refresh:data": "node scripts/fetch-osm-skateparks.mjs",
+    "validate:data": "node scripts/validate-geojson.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

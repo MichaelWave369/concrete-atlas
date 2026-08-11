@@ -1,0 +1,12 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "project": "Concrete Atlas",
+    "version": "0.1.0",
+    "generated_at": null,
+    "source": "OpenStreetMap via Overpass API",
+    "coverage": "No snapshot bundled. Run npm run refresh:data to generate the nationwide dataset.",
+    "feature_count": 0
+  },
+  "features": []
+}
