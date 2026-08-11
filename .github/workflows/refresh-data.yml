@@ -46,6 +46,7 @@ jobs:
         run: |
           node --check scripts/fetch-osm-skateparks.mjs
           node --check scripts/merge-skatepark-chunks.mjs
+          node --check scripts/build-quality-report.mjs
 
       - name: Fetch classified skate-location chunk
         id: refresh
@@ -99,11 +100,15 @@ jobs:
       - name: Validate merged nationwide snapshot
         run: npm run validate:data
 
+      - name: Build data quality observatory report
+        run: npm run report:data
+
       - name: Summarize coverage
         run: |
           node - <<'NODE'
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('data/skateparks.geojson', 'utf8'));
+          const quality = JSON.parse(fs.readFileSync('data/quality-report.json', 'utf8'));
           const failures = data.metadata?.failed_states || [];
           const receipts = data.metadata?.state_sources || [];
           const excluded = data.metadata?.excluded_non_facility_count || 0;
@@ -114,19 +119,23 @@ jobs:
           console.log(`State/DC codes requested: ${data.metadata?.requested_states?.length || 0}`);
           console.log(`Fresh state receipts: ${receipts.length}`);
           console.log(`Failed primary states: ${failures.length}`);
+          console.log(`Named coverage: ${quality.field_coverage.named.percent}%`);
+          console.log(`Surface coverage: ${quality.field_coverage.surface_known.percent}%`);
+          console.log(`Lights coverage: ${quality.field_coverage.lights_known.percent}%`);
+          console.log(`Hours coverage: ${quality.field_coverage.opening_hours_known.percent}%`);
           if ((data.metadata?.requested_states?.length || 0) !== 51) throw new Error('Expected 51 state/DC codes');
           if (!data.features?.length) throw new Error('Nationwide snapshot is empty');
           if (failures.length) console.log(`::warning::Primary failures retained in metadata: ${failures.map(x => x.state).join(', ')}`);
           NODE
 
-      - name: Commit changed snapshot
+      - name: Commit changed snapshot and quality report
         run: |
-          if git diff --quiet -- data/skateparks.geojson; then
-            echo "No data changes."
-            exit 0
-          fi
           git config user.name "concrete-atlas-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/skateparks.geojson
-          git commit -m "data: refresh classified OSM skatepark snapshot"
+          git add data/skateparks.geojson data/quality-report.json
+          if git diff --cached --quiet; then
+            echo "No data or quality-report changes."
+            exit 0
+          fi
+          git commit -m "data: refresh classified skatepark snapshot and quality report"
           git push
