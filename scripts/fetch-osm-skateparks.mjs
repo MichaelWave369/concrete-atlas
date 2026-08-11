@@ -12,9 +12,10 @@ for (const state of STATES) {
 
 const endpoints = (process.env.OVERPASS_ENDPOINTS || 'https://overpass-api.de/api/interpreter,https://lz4.overpass-api.de/api/interpreter,https://z.overpass-api.de/api/interpreter')
   .split(',').map(v => v.trim()).filter(Boolean);
-const pauseMs = Number(process.env.OVERPASS_DELAY_MS || 500);
-const timeoutSeconds = Number(process.env.OVERPASS_TIMEOUT_SECONDS || 25);
+const pauseMs = Number(process.env.OVERPASS_DELAY_MS || 1500);
+const timeoutSeconds = Number(process.env.OVERPASS_TIMEOUT_SECONDS || 20);
 const maxSourceLagHours = Number(process.env.MAX_SOURCE_LAG_HOURS || 72);
+const includeSupplemental = /^(1|true|yes)$/i.test(process.env.INCLUDE_SUPPLEMENTAL || 'false');
 const outputPath = new URL('../data/skateparks.geojson', import.meta.url);
 
 function areaPrefix(state) {
@@ -160,11 +161,13 @@ async function fetchState(state) {
   const primary = await fetchQuery(state, 'primary:sport=skateboard', primaryQuery(state));
   let supplemental = null;
   let supplementalError = null;
-  try {
-    supplemental = await fetchQuery(state, 'supplemental:leisure=skate_park|skatepark', supplementalQuery(state));
-  } catch (error) {
-    supplementalError = error.message;
-    console.warn(`[${state}] supplemental skatepark tags unavailable: ${error.message}`);
+  if (includeSupplemental) {
+    try {
+      supplemental = await fetchQuery(state, 'supplemental:leisure=skate_park|skatepark', supplementalQuery(state));
+    } catch (error) {
+      supplementalError = error.message;
+      console.warn(`[${state}] supplemental skatepark tags unavailable: ${error.message}`);
+    }
   }
   const elements = new Map();
   for (const el of primary.elements) elements.set(`${el.type}/${el.id}`, el);
@@ -174,6 +177,7 @@ async function fetchState(state) {
     receipt: {
       state,
       primary: primary.receipt,
+      supplemental_enabled: includeSupplemental,
       supplemental: supplemental?.receipt || null,
       supplemental_error: supplementalError,
       merged_element_count: elements.size
@@ -212,7 +216,7 @@ for (const [i, state] of STATES.entries()) {
       accepted += 1;
     }
     stateSources.push({ ...result.receipt, feature_count: accepted });
-    const supplementNote = result.receipt.supplemental_error ? ' (supplement unavailable)' : '';
+    const supplementNote = includeSupplemental && result.receipt.supplemental_error ? ' (supplement unavailable)' : '';
     console.log(`${accepted} returned; ${byId.size} unique total${supplementNote}`);
   } catch (error) {
     const retained = previousByState.get(state) || [];
@@ -228,6 +232,9 @@ const features = [...byId.values()].sort((a, b) =>
   a.properties.source_id.localeCompare(b.properties.source_id)
 );
 
+const queryTags = ['sport includes skateboard (primary)'];
+if (includeSupplemental) queryTags.push('leisure=skate_park (supplemental)', 'leisure=skatepark (supplemental)');
+
 const collection = {
   type: 'FeatureCollection',
   metadata: {
@@ -241,8 +248,9 @@ const collection = {
     failed_states: failures,
     state_sources: stateSources,
     source_freshness_policy_hours: maxSourceLagHours,
+    supplemental_enabled: includeSupplemental,
     retained_failed_state_features: failures.reduce((sum, x) => sum + (x.retained_feature_count || 0), 0),
-    query_tags: ['sport includes skateboard (primary)', 'leisure=skate_park (supplemental)', 'leisure=skatepark (supplemental)']
+    query_tags: queryTags
   },
   features
 };
