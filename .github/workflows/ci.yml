@@ -31,5 +31,11 @@ jobs:
       - name: Check validator syntax
         run: node --check scripts/validate-geojson.mjs
 
+      - name: Check quality report generator syntax
+        run: node --check scripts/build-quality-report.mjs
+
       - name: Validate bundled GeoJSON snapshot
         run: npm run validate:data
+
+      - name: Build quality report from bundled snapshot
+        run: npm run report:data
