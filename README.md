@@ -1,4 +1,4 @@
-# Concrete Atlas v0.1.0
+# Concrete Atlas v0.1.1
 
 **The living map of American skateboarding.**
 
@@ -6,7 +6,7 @@ Public, open-source, and provenance-aware: the application software is MIT-licen
 
 Concrete Atlas is a static-first interactive U.S. skatepark atlas. It uses MapLibre GL JS for the map, OpenFreeMap for the basemap, and OpenStreetMap/Overpass as the initial nationwide data seed.
 
-## v0.1.0 capabilities
+## v0.1.1 capabilities
 
 - U.S.-wide interactive map shell
 - MapLibre point clustering
@@ -20,6 +20,11 @@ Concrete Atlas is a static-first interactive U.S. skatepark atlas. It uses MapLi
 - Optional single-state live Overpass query for development
 - Verification field separated from source ingestion
 - GitHub Action for manual or twice-monthly snapshot refresh
+- Find Near Me with distance-sorted nearby park list
+- Viewport-aware sidebar results
+- Shareable park hash URLs
+- Partial refreshes retain prior state data instead of silently dropping it
+- Validator rejects duplicate source IDs and feature-count drift
 
 ## Why the importer is state-by-state
 
@@ -79,6 +84,10 @@ For each state + D.C., the importer queries objects that match either:
 - `sport` containing `skateboard`
 
 This intentionally favors recall over perfect classification. Later governance passes can separate skateparks, plazas, indoor facilities, DIY parks, mixed-use wheel parks, and probable false positives.
+
+## Partial refresh behavior
+
+If a state-level query fails during a later refresh, Concrete Atlas retains that state's last known snapshot records instead of deleting them. The failed state and number of retained records are written into snapshot metadata so partial coverage stays visible and auditable.
 
 ## Production scaling path
 
