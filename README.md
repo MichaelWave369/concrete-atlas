@@ -1,12 +1,14 @@
-# Concrete Atlas v0.1.3
+# Concrete Atlas v0.2.0-alpha.1
 
 **The living map of American skateboarding.**
+
+**Live atlas:** https://michaelwave369.github.io/concrete-atlas/
 
 Public, open-source, and provenance-aware: the application software is MIT-licensed, while OpenStreetMap-derived database content remains subject to the ODbL. See [`LICENSE`](./LICENSE) and [`DATA_LICENSE.md`](./DATA_LICENSE.md).
 
 Concrete Atlas is a static-first interactive U.S. skatepark atlas. It uses MapLibre GL JS for the map, OpenFreeMap for the basemap, and OpenStreetMap/Overpass as the initial nationwide data seed.
 
-## v0.1.3 capabilities
+## Current capabilities
 
 - U.S.-wide interactive map shell and clustering
 - Search by park/city/operator
@@ -23,9 +25,11 @@ Concrete Atlas is a static-first interactive U.S. skatepark atlas. It uses MapLi
 - Explicit `candidate_kind`, `candidate_confidence`, and `candidate_reason`
 - Deterministic Data Quality Observatory report
 - Header receipts for named coverage, surface coverage, and failed-state count
-- Static GeoJSON snapshot suitable for Netlify
+- Conservative Park Intelligence evidence extraction from stored raw OSM tags
+- Static GeoJSON snapshot suitable for GitHub Pages and Netlify
 - GitHub CI and twice-monthly/manual dataset refresh
 - Independent quality-report publication when canonical data changes
+- Automatic GitHub Pages deployment from `main` when the public app or canonical data changes
 
 ## First run
 
@@ -33,6 +37,7 @@ Requirements: Node.js 20+ and internet access.
 
 ```bash
 npm run refresh:data
+npm run enrich:intelligence
 npm run validate:data
 npm run report:data
 npm run serve
@@ -56,6 +61,14 @@ Objects tagged as `shop`, `office`, or `craft` are excluded unless they also car
 
 The classifier is deliberately conservative and versioned so future governance passes can improve it without erasing provenance.
 
+## Park Intelligence alpha
+
+`npm run enrich:intelligence` derives a conservative evidence layer from raw OSM tags already stored on each source feature. It does not infer terrain from names, descriptions, photos, or nearby map context.
+
+The current alpha records explicit equipment signals, broad terrain families only when directly supported by recognized equipment tags, direct amenity tags, and activity-access tags. Unmapped or absent evidence remains unknown rather than being promoted into a claim.
+
+The first nationwide measurement showed that detailed Park Intelligence evidence in raw OSM is sparse. That result is being treated as a signal to prioritize community evidence and verification receipts rather than manufacture nationwide terrain metadata.
+
 ## Data Quality Observatory
 
 `npm run report:data` deterministically derives `data/quality-report.json` from the canonical GeoJSON snapshot.
@@ -77,9 +90,11 @@ The browser loads the report independently through `assets/quality.js`; if the r
 
 ## Refresh architecture
 
-The nationwide OSM crawl is intentionally schedule/manual only. It runs finite state chunks with serialized public-Overpass access, rate-limit backoff, source-freshness validation, deterministic merging, validation, and failed-state retention.
+The nationwide OSM crawl is intentionally schedule/manual only. It runs finite state chunks with serialized public-Overpass access, rate-limit backoff, source-freshness validation, deterministic merging, Park Intelligence enrichment, validation, and failed-state retention.
 
 Quality-report generation is a separate lightweight workflow. A changed canonical `data/skateparks.geojson` automatically regenerates `data/quality-report.json` without launching another nationwide crawl.
+
+GitHub Pages deployment is also independent. Changes to the public app or canonical data publish a minimal runtime artifact containing only `index.html`, `assets/`, and the canonical data files.
 
 ## OSM query policy
 
@@ -107,14 +122,13 @@ As Concrete Atlas grows, ingestion should graduate to one of:
 - PostGIS + scheduled import pipeline
 - PMTiles/vector tiles for large front-end datasets
 
-## Planned v0.2
+## Next v0.2 work
 
-- stronger canonical deduplication
-- terrain taxonomy: street / bowl / transition / vert / flow / pump
-- amenity taxonomy
-- rider-submitted corrections
-- verification receipts + history
-- closure / construction / damage status
+- immutable community evidence receipts
+- deterministic community verification reducer
+- conflict / closure / staleness handling
+- rider-submitted corrections and observations
+- community-backed terrain and amenity evidence
 - photos
 - favorites / visited parks
 - Road Trip Mode and route-corridor park search
