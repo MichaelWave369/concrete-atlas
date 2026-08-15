@@ -1,22 +1,22 @@
 {
   "schema_version": "0.1",
   "project": "Concrete Atlas",
-  "generated_at": "2026-08-11T06:25:53.256Z",
-  "snapshot_generated_at": "2026-08-11T06:02:48.176Z",
+  "generated_at": "2026-08-15T10:05:16.143Z",
+  "snapshot_generated_at": "2026-08-15T09:58:53.101Z",
   "snapshot_version": "0.1.2",
   "totals": {
     "source_candidates": 4199,
-    "excluded_non_facility_candidates": 158,
+    "excluded_non_facility_candidates": 83,
     "requested_state_dc_codes": 51,
-    "fresh_state_receipts": 50,
-    "failed_primary_states": 1,
-    "retained_failed_state_features": 7,
+    "fresh_state_receipts": 38,
+    "failed_primary_states": 13,
+    "retained_failed_state_features": 1273,
     "retained_supplemental_features": 0
   },
   "field_coverage": {
     "named": {
-      "count": 1451,
-      "percent": 34.56
+      "count": 1453,
+      "percent": 34.6
     },
     "classified": {
       "count": 4199,
@@ -65,14 +65,14 @@
   },
   "distributions": {
     "candidate_kind": {
-      "skate_facility": 4118,
-      "probable_skatepark": 48,
+      "skate_facility": 4119,
+      "probable_skatepark": 47,
       "skateboard_facility_candidate": 31,
       "skatepark": 2
     },
     "candidate_confidence": {
-      "high": 4120,
-      "medium_high": 48,
+      "high": 4121,
+      "medium_high": 47,
       "medium": 31
     },
     "verification_status": {
@@ -81,7 +81,7 @@
     "source_state": {
       "CA": 559,
       "TX": 229,
-      "WA": 213,
+      "WA": 212,
       "IL": 185,
       "CO": 172,
       "NY": 157,
@@ -98,7 +98,7 @@
       "NJ": 81,
       "IN": 76,
       "NC": 74,
-      "VA": 70,
+      "VA": 71,
       "UT": 69,
       "NM": 67,
       "IA": 65,
@@ -135,20 +135,92 @@
   "source_health": {
     "freshness_policy_hours": 72,
     "primary_source_lag_hours": {
-      "count": 50,
+      "count": 38,
       "min": 0.02,
       "median": 0.03,
       "mean": 0.03,
-      "max": 0.03
+      "max": 0.04
     },
     "supplemental_enabled": true,
-    "supplemental_success_states": 37,
-    "supplemental_unavailable_states": 13,
+    "supplemental_success_states": 27,
+    "supplemental_unavailable_states": 11,
     "failed_primary_states": [
       {
+        "state": "AK",
+        "error": "fetch failed",
+        "retained_feature_count": 16,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "AL",
+        "error": "fetch failed",
+        "retained_feature_count": 28,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "AR",
+        "error": "fetch failed",
+        "retained_feature_count": 39,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "AZ",
+        "error": "fetch failed",
+        "retained_feature_count": 105,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "CA",
+        "error": "fetch failed",
+        "retained_feature_count": 559,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "CO",
+        "error": "fetch failed",
+        "retained_feature_count": 172,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "CT",
+        "error": "fetch failed",
+        "retained_feature_count": 57,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
         "state": "DC",
-        "error": "504 Gateway Timeout",
+        "error": "fetch failed",
         "retained_feature_count": 7,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "DE",
+        "error": "fetch failed",
+        "retained_feature_count": 6,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "FL",
+        "error": "fetch failed",
+        "retained_feature_count": 140,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "GA",
+        "error": "fetch failed",
+        "retained_feature_count": 56,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "HI",
+        "error": "fetch failed",
+        "retained_feature_count": 19,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "UT",
+        "error": "504 Gateway Timeout",
+        "retained_feature_count": 69,
         "retained_excluded_non_facility_count": 0
       }
     ]
