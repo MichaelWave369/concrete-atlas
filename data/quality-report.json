@@ -1,62 +1,62 @@
 {
   "schema_version": "0.1",
   "project": "Concrete Atlas",
-  "generated_at": "2026-08-15T10:05:16.143Z",
-  "snapshot_generated_at": "2026-08-15T09:58:53.101Z",
+  "generated_at": "2026-09-01T14:33:08.160Z",
+  "snapshot_generated_at": "2026-09-01T14:28:31.328Z",
   "snapshot_version": "0.1.2",
   "totals": {
-    "source_candidates": 4199,
-    "excluded_non_facility_candidates": 83,
+    "source_candidates": 4200,
+    "excluded_non_facility_candidates": 71,
     "requested_state_dc_codes": 51,
-    "fresh_state_receipts": 38,
-    "failed_primary_states": 13,
-    "retained_failed_state_features": 1273,
+    "fresh_state_receipts": 29,
+    "failed_primary_states": 22,
+    "retained_failed_state_features": 1956,
     "retained_supplemental_features": 0
   },
   "field_coverage": {
     "named": {
-      "count": 1453,
-      "percent": 34.6
+      "count": 1456,
+      "percent": 34.67
     },
     "classified": {
-      "count": 4199,
+      "count": 4200,
       "percent": 100
     },
     "surface_known": {
       "count": 1577,
-      "percent": 37.56
+      "percent": 37.55
     },
     "concrete_surface": {
       "count": 1256,
-      "percent": 29.91
+      "percent": 29.9
     },
     "lights_known": {
-      "count": 586,
-      "percent": 13.96
+      "count": 587,
+      "percent": 13.98
     },
     "opening_hours_known": {
-      "count": 82,
-      "percent": 1.95
+      "count": 81,
+      "percent": 1.93
     },
     "indoor_status_known": {
       "count": 54,
       "percent": 1.29
     },
     "address_known": {
-      "count": 232,
-      "percent": 5.53
+      "count": 234,
+      "percent": 5.57
     },
     "operator_known": {
-      "count": 74,
-      "percent": 1.76
+      "count": 75,
+      "percent": 1.79
     },
     "website_known": {
       "count": 183,
       "percent": 4.36
     },
     "access_known": {
-      "count": 567,
-      "percent": 13.5
+      "count": 569,
+      "percent": 13.55
     },
     "community_verified": {
       "count": 0,
@@ -67,44 +67,44 @@
     "candidate_kind": {
       "skate_facility": 4119,
       "probable_skatepark": 47,
-      "skateboard_facility_candidate": 31,
+      "skateboard_facility_candidate": 32,
       "skatepark": 2
     },
     "candidate_confidence": {
       "high": 4121,
       "medium_high": 47,
-      "medium": 31
+      "medium": 32
     },
     "verification_status": {
-      "osm_seeded": 4199
+      "osm_seeded": 4200
     },
     "source_state": {
       "CA": 559,
       "TX": 229,
-      "WA": 212,
+      "WA": 213,
       "IL": 185,
       "CO": 172,
       "NY": 157,
-      "OH": 156,
+      "OH": 154,
       "MI": 146,
       "FL": 140,
       "PA": 132,
       "MN": 130,
       "OR": 129,
       "WI": 121,
-      "MA": 113,
-      "AZ": 105,
+      "MA": 111,
+      "AZ": 106,
       "MO": 83,
       "NJ": 81,
       "IN": 76,
-      "NC": 74,
+      "NC": 75,
       "VA": 71,
-      "UT": 69,
+      "UT": 70,
       "NM": 67,
       "IA": 65,
       "NV": 59,
+      "ID": 58,
       "CT": 57,
-      "ID": 57,
       "GA": 56,
       "MD": 56,
       "KS": 54,
@@ -135,38 +135,20 @@
   "source_health": {
     "freshness_policy_hours": 72,
     "primary_source_lag_hours": {
-      "count": 38,
+      "count": 29,
       "min": 0.02,
       "median": 0.03,
       "mean": 0.03,
       "max": 0.04
     },
     "supplemental_enabled": true,
-    "supplemental_success_states": 27,
-    "supplemental_unavailable_states": 11,
+    "supplemental_success_states": 19,
+    "supplemental_unavailable_states": 10,
     "failed_primary_states": [
-      {
-        "state": "AK",
-        "error": "fetch failed",
-        "retained_feature_count": 16,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
-        "state": "AL",
-        "error": "fetch failed",
-        "retained_feature_count": 28,
-        "retained_excluded_non_facility_count": 0
-      },
       {
         "state": "AR",
         "error": "fetch failed",
         "retained_feature_count": 39,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
-        "state": "AZ",
-        "error": "fetch failed",
-        "retained_feature_count": 105,
         "retained_excluded_non_facility_count": 0
       },
       {
@@ -218,9 +200,81 @@
         "retained_excluded_non_facility_count": 0
       },
       {
-        "state": "UT",
+        "state": "IL",
         "error": "504 Gateway Timeout",
-        "retained_feature_count": 69,
+        "retained_feature_count": 185,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MD",
+        "error": "504 Gateway Timeout",
+        "retained_feature_count": 56,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MS",
+        "error": "504 Gateway Timeout",
+        "retained_feature_count": 10,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NJ",
+        "error": "fetch failed",
+        "retained_feature_count": 81,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "OR",
+        "error": "fetch failed",
+        "retained_feature_count": 129,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "PA",
+        "error": "fetch failed",
+        "retained_feature_count": 132,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "RI",
+        "error": "fetch failed",
+        "retained_feature_count": 18,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "SD",
+        "error": "fetch failed",
+        "retained_feature_count": 22,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "VA",
+        "error": "504 Gateway Timeout",
+        "retained_feature_count": 71,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "VT",
+        "error": "504 Gateway Timeout",
+        "retained_feature_count": 21,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "WI",
+        "error": "fetch failed",
+        "retained_feature_count": 121,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "WV",
+        "error": "fetch failed",
+        "retained_feature_count": 26,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "WY",
+        "error": "fetch failed",
+        "retained_feature_count": 29,
         "retained_excluded_non_facility_count": 0
       }
     ]
