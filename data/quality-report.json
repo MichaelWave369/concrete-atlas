@@ -1,62 +1,62 @@
 {
   "schema_version": "0.1",
   "project": "Concrete Atlas",
-  "generated_at": "2026-09-15T14:49:16.848Z",
-  "snapshot_generated_at": "2026-09-15T14:42:13.608Z",
+  "generated_at": "2026-10-01T16:54:47.357Z",
+  "snapshot_generated_at": "2026-10-01T16:48:58.414Z",
   "snapshot_version": "0.1.2",
   "totals": {
-    "source_candidates": 4206,
-    "excluded_non_facility_candidates": 133,
+    "source_candidates": 4220,
+    "excluded_non_facility_candidates": 155,
     "requested_state_dc_codes": 51,
-    "fresh_state_receipts": 38,
-    "failed_primary_states": 13,
-    "retained_failed_state_features": 898,
-    "retained_supplemental_features": 1
+    "fresh_state_receipts": 47,
+    "failed_primary_states": 4,
+    "retained_failed_state_features": 276,
+    "retained_supplemental_features": 0
   },
   "field_coverage": {
     "named": {
-      "count": 1462,
-      "percent": 34.76
+      "count": 1468,
+      "percent": 34.79
     },
     "classified": {
-      "count": 4206,
+      "count": 4220,
       "percent": 100
     },
     "surface_known": {
-      "count": 1581,
-      "percent": 37.59
+      "count": 1584,
+      "percent": 37.54
     },
     "concrete_surface": {
-      "count": 1260,
-      "percent": 29.96
+      "count": 1263,
+      "percent": 29.93
     },
     "lights_known": {
-      "count": 590,
-      "percent": 14.03
+      "count": 594,
+      "percent": 14.08
     },
     "opening_hours_known": {
-      "count": 81,
-      "percent": 1.93
+      "count": 82,
+      "percent": 1.94
     },
     "indoor_status_known": {
-      "count": 55,
-      "percent": 1.31
+      "count": 56,
+      "percent": 1.33
     },
     "address_known": {
-      "count": 236,
-      "percent": 5.61
+      "count": 237,
+      "percent": 5.62
     },
     "operator_known": {
       "count": 75,
       "percent": 1.78
     },
     "website_known": {
-      "count": 184,
-      "percent": 4.37
+      "count": 185,
+      "percent": 4.38
     },
     "access_known": {
-      "count": 573,
-      "percent": 13.62
+      "count": 577,
+      "percent": 13.67
     },
     "community_verified": {
       "count": 0,
@@ -65,21 +65,21 @@
   },
   "distributions": {
     "candidate_kind": {
-      "skate_facility": 4125,
+      "skate_facility": 4139,
       "probable_skatepark": 47,
       "skateboard_facility_candidate": 32,
       "skatepark": 2
     },
     "candidate_confidence": {
-      "high": 4127,
+      "high": 4141,
       "medium_high": 47,
       "medium": 32
     },
     "verification_status": {
-      "osm_seeded": 4206
+      "osm_seeded": 4220
     },
     "source_state": {
-      "CA": 561,
+      "CA": 563,
       "TX": 229,
       "WA": 213,
       "IL": 185,
@@ -87,30 +87,30 @@
       "NY": 158,
       "OH": 154,
       "MI": 146,
-      "FL": 140,
+      "FL": 139,
       "PA": 132,
       "MN": 131,
       "OR": 129,
-      "WI": 122,
-      "MA": 111,
-      "AZ": 107,
+      "WI": 123,
+      "MA": 112,
+      "AZ": 109,
       "MO": 83,
       "NJ": 81,
       "IN": 76,
       "NC": 75,
+      "UT": 72,
       "VA": 72,
-      "UT": 70,
       "NM": 67,
-      "IA": 65,
+      "IA": 66,
+      "CT": 59,
       "NV": 59,
       "ID": 58,
-      "CT": 57,
-      "GA": 56,
-      "MD": 56,
+      "MD": 58,
+      "GA": 57,
       "KS": 54,
       "OK": 54,
       "TN": 49,
-      "KY": 47,
+      "KY": 48,
       "NH": 44,
       "MT": 40,
       "AR": 39,
@@ -135,31 +135,19 @@
   "source_health": {
     "freshness_policy_hours": 72,
     "primary_source_lag_hours": {
-      "count": 38,
+      "count": 47,
       "min": 0.02,
-      "median": 0.04,
+      "median": 0.03,
       "mean": 0.03,
-      "max": 0.05
+      "max": 0.04
     },
     "supplemental_enabled": true,
-    "supplemental_success_states": 27,
-    "supplemental_unavailable_states": 11,
+    "supplemental_success_states": 33,
+    "supplemental_unavailable_states": 14,
     "failed_primary_states": [
       {
-        "state": "FL",
-        "error": "fetch failed",
-        "retained_feature_count": 140,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
-        "state": "GA",
-        "error": "fetch failed",
-        "retained_feature_count": 56,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
         "state": "HI",
-        "error": "fetch failed",
+        "error": "504 Gateway Timeout",
         "retained_feature_count": 19,
         "retained_excluded_non_facility_count": 0
       },
@@ -170,57 +158,15 @@
         "retained_excluded_non_facility_count": 0
       },
       {
-        "state": "MA",
+        "state": "OK",
         "error": "fetch failed",
-        "retained_feature_count": 111,
+        "retained_feature_count": 54,
         "retained_excluded_non_facility_count": 0
       },
       {
-        "state": "MD",
+        "state": "RI",
         "error": "fetch failed",
-        "retained_feature_count": 56,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
-        "state": "MT",
-        "error": "fetch failed",
-        "retained_feature_count": 40,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
-        "state": "NE",
-        "error": "fetch failed",
-        "retained_feature_count": 27,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
-        "state": "NH",
-        "error": "fetch failed",
-        "retained_feature_count": 44,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
-        "state": "NJ",
-        "error": "fetch failed",
-        "retained_feature_count": 81,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
-        "state": "NM",
-        "error": "fetch failed",
-        "retained_feature_count": 67,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
-        "state": "NV",
-        "error": "fetch failed",
-        "retained_feature_count": 59,
-        "retained_excluded_non_facility_count": 0
-      },
-      {
-        "state": "SC",
-        "error": "504 Gateway Timeout",
-        "retained_feature_count": 13,
+        "retained_feature_count": 18,
         "retained_excluded_non_facility_count": 0
       }
     ]
