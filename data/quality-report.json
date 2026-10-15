@@ -1,16 +1,16 @@
 {
   "schema_version": "0.1",
   "project": "Concrete Atlas",
-  "generated_at": "2026-10-01T16:54:47.357Z",
-  "snapshot_generated_at": "2026-10-01T16:48:58.414Z",
+  "generated_at": "2026-10-15T14:32:16.831Z",
+  "snapshot_generated_at": "2026-10-15T14:27:31.556Z",
   "snapshot_version": "0.1.2",
   "totals": {
     "source_candidates": 4220,
-    "excluded_non_facility_candidates": 155,
+    "excluded_non_facility_candidates": 0,
     "requested_state_dc_codes": 51,
-    "fresh_state_receipts": 47,
-    "failed_primary_states": 4,
-    "retained_failed_state_features": 276,
+    "fresh_state_receipts": 0,
+    "failed_primary_states": 51,
+    "retained_failed_state_features": 4220,
     "retained_supplemental_features": 0
   },
   "field_coverage": {
@@ -135,26 +135,230 @@
   "source_health": {
     "freshness_policy_hours": 72,
     "primary_source_lag_hours": {
-      "count": 47,
-      "min": 0.02,
-      "median": 0.03,
-      "mean": 0.03,
-      "max": 0.04
+      "count": 0,
+      "min": null,
+      "median": null,
+      "mean": null,
+      "max": null
     },
     "supplemental_enabled": true,
-    "supplemental_success_states": 33,
-    "supplemental_unavailable_states": 14,
+    "supplemental_success_states": 0,
+    "supplemental_unavailable_states": 0,
     "failed_primary_states": [
       {
+        "state": "AK",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 16,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "AL",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 28,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "AR",
+        "error": "This operation was aborted",
+        "retained_feature_count": 39,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "AZ",
+        "error": "This operation was aborted",
+        "retained_feature_count": 109,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "CA",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 563,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "CO",
+        "error": "This operation was aborted",
+        "retained_feature_count": 172,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "CT",
+        "error": "This operation was aborted",
+        "retained_feature_count": 59,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "DC",
+        "error": "This operation was aborted",
+        "retained_feature_count": 7,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "DE",
+        "error": "This operation was aborted",
+        "retained_feature_count": 6,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "FL",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 139,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "GA",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 57,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
         "state": "HI",
-        "error": "504 Gateway Timeout",
+        "error": "502 Bad Gateway",
         "retained_feature_count": 19,
         "retained_excluded_non_facility_count": 0
       },
       {
+        "state": "IA",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 66,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "ID",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 58,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
         "state": "IL",
-        "error": "504 Gateway Timeout",
+        "error": "502 Bad Gateway",
         "retained_feature_count": 185,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "IN",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 76,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "KS",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 54,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "KY",
+        "error": "This operation was aborted",
+        "retained_feature_count": 48,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "LA",
+        "error": "This operation was aborted",
+        "retained_feature_count": 19,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MA",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 112,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MD",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 58,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "ME",
+        "error": "This operation was aborted",
+        "retained_feature_count": 28,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MI",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 146,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MN",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 131,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MO",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 83,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MS",
+        "error": "This operation was aborted",
+        "retained_feature_count": 10,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MT",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 40,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NC",
+        "error": "fetch failed",
+        "retained_feature_count": 75,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "ND",
+        "error": "fetch failed",
+        "retained_feature_count": 25,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NE",
+        "error": "This operation was aborted",
+        "retained_feature_count": 27,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NH",
+        "error": "This operation was aborted",
+        "retained_feature_count": 44,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NJ",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 81,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NM",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 67,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NV",
+        "error": "This operation was aborted",
+        "retained_feature_count": 59,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NY",
+        "error": "fetch failed",
+        "retained_feature_count": 158,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "OH",
+        "error": "fetch failed",
+        "retained_feature_count": 154,
         "retained_excluded_non_facility_count": 0
       },
       {
@@ -164,9 +368,87 @@
         "retained_excluded_non_facility_count": 0
       },
       {
+        "state": "OR",
+        "error": "fetch failed",
+        "retained_feature_count": 129,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "PA",
+        "error": "fetch failed",
+        "retained_feature_count": 132,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
         "state": "RI",
         "error": "fetch failed",
         "retained_feature_count": 18,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "SC",
+        "error": "fetch failed",
+        "retained_feature_count": 13,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "SD",
+        "error": "fetch failed",
+        "retained_feature_count": 22,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "TN",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 49,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "TX",
+        "error": "This operation was aborted",
+        "retained_feature_count": 229,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "UT",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 72,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "VA",
+        "error": "This operation was aborted",
+        "retained_feature_count": 72,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "VT",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 21,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "WA",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 213,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "WI",
+        "error": "This operation was aborted",
+        "retained_feature_count": 123,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "WV",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 26,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "WY",
+        "error": "This operation was aborted",
+        "retained_feature_count": 29,
         "retained_excluded_non_facility_count": 0
       }
     ]

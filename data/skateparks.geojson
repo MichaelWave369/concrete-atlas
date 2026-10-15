@@ -3,7 +3,7 @@
   "metadata": {
     "project": "Concrete Atlas",
     "version": "0.1.2",
-    "generated_at": "2026-10-01T16:48:58.414Z",
+    "generated_at": "2026-10-15T14:27:31.556Z",
     "source": "OpenStreetMap via Overpass API",
     "coverage": "50 U.S. states plus District of Columbia",
     "requested_states": [
@@ -62,15 +62,219 @@
     "feature_count": 4220,
     "failed_states": [
       {
+        "state": "AK",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 16,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "AL",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 28,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "AR",
+        "error": "This operation was aborted",
+        "retained_feature_count": 39,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "AZ",
+        "error": "This operation was aborted",
+        "retained_feature_count": 109,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "CA",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 563,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "CO",
+        "error": "This operation was aborted",
+        "retained_feature_count": 172,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "CT",
+        "error": "This operation was aborted",
+        "retained_feature_count": 59,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "DC",
+        "error": "This operation was aborted",
+        "retained_feature_count": 7,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "DE",
+        "error": "This operation was aborted",
+        "retained_feature_count": 6,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "FL",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 139,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "GA",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 57,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
         "state": "HI",
-        "error": "504 Gateway Timeout",
+        "error": "502 Bad Gateway",
         "retained_feature_count": 19,
         "retained_excluded_non_facility_count": 0
       },
       {
+        "state": "IA",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 66,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "ID",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 58,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
         "state": "IL",
-        "error": "504 Gateway Timeout",
+        "error": "502 Bad Gateway",
         "retained_feature_count": 185,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "IN",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 76,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "KS",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 54,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "KY",
+        "error": "This operation was aborted",
+        "retained_feature_count": 48,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "LA",
+        "error": "This operation was aborted",
+        "retained_feature_count": 19,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MA",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 112,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MD",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 58,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "ME",
+        "error": "This operation was aborted",
+        "retained_feature_count": 28,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MI",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 146,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MN",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 131,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MO",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 83,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MS",
+        "error": "This operation was aborted",
+        "retained_feature_count": 10,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "MT",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 40,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NC",
+        "error": "fetch failed",
+        "retained_feature_count": 75,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "ND",
+        "error": "fetch failed",
+        "retained_feature_count": 25,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NE",
+        "error": "This operation was aborted",
+        "retained_feature_count": 27,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NH",
+        "error": "This operation was aborted",
+        "retained_feature_count": 44,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NJ",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 81,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NM",
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 67,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NV",
+        "error": "This operation was aborted",
+        "retained_feature_count": 59,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "NY",
+        "error": "fetch failed",
+        "retained_feature_count": 158,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "OH",
+        "error": "fetch failed",
+        "retained_feature_count": 154,
         "retained_excluded_non_facility_count": 0
       },
       {
@@ -80,1222 +284,95 @@
         "retained_excluded_non_facility_count": 0
       },
       {
+        "state": "OR",
+        "error": "fetch failed",
+        "retained_feature_count": 129,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
+        "state": "PA",
+        "error": "fetch failed",
+        "retained_feature_count": 132,
+        "retained_excluded_non_facility_count": 0
+      },
+      {
         "state": "RI",
         "error": "fetch failed",
         "retained_feature_count": 18,
         "retained_excluded_non_facility_count": 0
-      }
-    ],
-    "state_sources": [
-      {
-        "state": "AK",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:26:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 16,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:26:12Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 16,
-        "feature_count": 16,
-        "fresh_feature_count": 16,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
-      },
-      {
-        "state": "AL",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:25:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 29,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:25:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.04,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 29,
-        "feature_count": 28,
-        "fresh_feature_count": 28,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 1
-      },
-      {
-        "state": "AR",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://z.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:27:10Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 39,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:27:10Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 39,
-        "feature_count": 39,
-        "fresh_feature_count": 39,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
-      },
-      {
-        "state": "AZ",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:26:12Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 112,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:26:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 112,
-        "feature_count": 109,
-        "fresh_feature_count": 109,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 3
-      },
-      {
-        "state": "CA",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:27:10Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.04,
-          "element_count": 612,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 612,
-        "feature_count": 563,
-        "fresh_feature_count": 563,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 49
-      },
-      {
-        "state": "CO",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:28:12Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 177,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:28:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 177,
-        "feature_count": 172,
-        "fresh_feature_count": 172,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 5
-      },
-      {
-        "state": "CT",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:28:12Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 61,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:29:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 61,
-        "feature_count": 59,
-        "fresh_feature_count": 59,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 2
-      },
-      {
-        "state": "DC",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:53:15Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 7,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:53:15Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 7,
-        "feature_count": 7,
-        "fresh_feature_count": 7,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
-      },
-      {
-        "state": "DE",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:29:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 7,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:29:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 7,
-        "feature_count": 6,
-        "fresh_feature_count": 6,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 1
-      },
-      {
-        "state": "FL",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:29:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.04,
-          "element_count": 143,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:30:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 143,
-        "feature_count": 139,
-        "fresh_feature_count": 139,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 4
-      },
-      {
-        "state": "GA",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://z.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:30:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 60,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 60,
-        "feature_count": 57,
-        "fresh_feature_count": 57,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 3
-      },
-      {
-        "state": "IA",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:33:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 66,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:33:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 66,
-        "feature_count": 66,
-        "fresh_feature_count": 66,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
-      },
-      {
-        "state": "ID",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:31:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.04,
-          "element_count": 59,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:32:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 59,
-        "feature_count": 58,
-        "fresh_feature_count": 58,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 1
-      },
-      {
-        "state": "IN",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:32:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 77,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 77,
-        "feature_count": 76,
-        "fresh_feature_count": 76,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 1
-      },
-      {
-        "state": "KS",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:33:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 54,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 54,
-        "feature_count": 54,
-        "fresh_feature_count": 54,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
-      },
-      {
-        "state": "KY",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:34:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 49,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 49,
-        "feature_count": 48,
-        "fresh_feature_count": 48,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 1
-      },
-      {
-        "state": "LA",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:34:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 21,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:34:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 21,
-        "feature_count": 19,
-        "fresh_feature_count": 19,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 2
-      },
-      {
-        "state": "MA",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:35:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.04,
-          "element_count": 114,
-          "attempts": 2
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:36:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 114,
-        "feature_count": 112,
-        "fresh_feature_count": 112,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 2
-      },
-      {
-        "state": "MD",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:35:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 61,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:35:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 1,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 61,
-        "feature_count": 58,
-        "fresh_feature_count": 58,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 3
-      },
-      {
-        "state": "ME",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:34:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 28,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:35:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 28,
-        "feature_count": 28,
-        "fresh_feature_count": 28,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
-      },
-      {
-        "state": "MI",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:36:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 149,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:36:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 149,
-        "feature_count": 146,
-        "fresh_feature_count": 146,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 3
-      },
-      {
-        "state": "MN",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:36:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 135,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:37:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 135,
-        "feature_count": 131,
-        "fresh_feature_count": 131,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 4
-      },
-      {
-        "state": "MO",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:38:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 86,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:38:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 86,
-        "feature_count": 83,
-        "fresh_feature_count": 83,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 3
-      },
-      {
-        "state": "MS",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:37:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 10,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:37:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 10,
-        "feature_count": 10,
-        "fresh_feature_count": 10,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
-      },
-      {
-        "state": "MT",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:38:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 41,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 41,
-        "feature_count": 40,
-        "fresh_feature_count": 40,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 1
-      },
-      {
-        "state": "NC",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:42:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 77,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:42:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 77,
-        "feature_count": 75,
-        "fresh_feature_count": 75,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 2
-      },
-      {
-        "state": "ND",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:42:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 26,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 26,
-        "feature_count": 25,
-        "fresh_feature_count": 25,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 1
-      },
-      {
-        "state": "NE",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:39:14Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 27,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:39:14Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 27,
-        "feature_count": 27,
-        "fresh_feature_count": 27,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
-      },
-      {
-        "state": "NH",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:40:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 46,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 46,
-        "feature_count": 44,
-        "fresh_feature_count": 44,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 2
-      },
-      {
-        "state": "NJ",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:40:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 86,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:40:12Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 86,
-        "feature_count": 81,
-        "fresh_feature_count": 81,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 5
-      },
-      {
-        "state": "NM",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:40:12Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 69,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:41:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 69,
-        "feature_count": 67,
-        "fresh_feature_count": 67,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 2
-      },
-      {
-        "state": "NV",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:39:14Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.04,
-          "element_count": 61,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:40:12Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 61,
-        "feature_count": 59,
-        "fresh_feature_count": 59,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 2
-      },
-      {
-        "state": "NY",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:41:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 167,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:41:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 1,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 167,
-        "feature_count": 158,
-        "fresh_feature_count": 158,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 9
-      },
-      {
-        "state": "OH",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://z.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:43:14Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 155,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:43:14Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 155,
-        "feature_count": 154,
-        "fresh_feature_count": 154,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 1
-      },
-      {
-        "state": "OR",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:44:14Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 137,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 137,
-        "feature_count": 129,
-        "fresh_feature_count": 129,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 8
-      },
-      {
-        "state": "PA",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:44:14Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.04,
-          "element_count": 134,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 134,
-        "feature_count": 132,
-        "fresh_feature_count": 132,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 2
       },
       {
         "state": "SC",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:46:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 14,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 14,
-        "feature_count": 13,
-        "fresh_feature_count": 13,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 1
+        "error": "fetch failed",
+        "retained_feature_count": 13,
+        "retained_excluded_non_facility_count": 0
       },
       {
         "state": "SD",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:46:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 22,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 22,
-        "feature_count": 22,
-        "fresh_feature_count": 22,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
+        "error": "fetch failed",
+        "retained_feature_count": 22,
+        "retained_excluded_non_facility_count": 0
       },
       {
         "state": "TN",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:47:13Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 52,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:47:13Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 52,
-        "feature_count": 49,
-        "fresh_feature_count": 49,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 3
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 49,
+        "retained_excluded_non_facility_count": 0
       },
       {
         "state": "TX",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:48:14Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 238,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:48:14Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 238,
-        "feature_count": 229,
-        "fresh_feature_count": 229,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 9
+        "error": "This operation was aborted",
+        "retained_feature_count": 229,
+        "retained_excluded_non_facility_count": 0
       },
       {
         "state": "UT",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://z.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:49:14Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 79,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:49:14Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 79,
-        "feature_count": 72,
-        "fresh_feature_count": 72,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 7
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 72,
+        "retained_excluded_non_facility_count": 0
       },
       {
         "state": "VA",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:50:14Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 73,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:50:14Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 73,
-        "feature_count": 72,
-        "fresh_feature_count": 72,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 1
+        "error": "This operation was aborted",
+        "retained_feature_count": 72,
+        "retained_excluded_non_facility_count": 0
       },
       {
         "state": "VT",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:49:14Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 21,
-          "attempts": 2
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:49:14Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 21,
-        "feature_count": 21,
-        "fresh_feature_count": 21,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 21,
+        "retained_excluded_non_facility_count": 0
       },
       {
         "state": "WA",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:50:14Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 221,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:50:14Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.04,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 221,
-        "feature_count": 213,
-        "fresh_feature_count": 213,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 8
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 213,
+        "retained_excluded_non_facility_count": 0
       },
       {
         "state": "WI",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:52:15Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 126,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": {
-          "kind": "supplemental:leisure=skate_park|skatepark",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:52:15Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.02,
-          "element_count": 0,
-          "attempts": 1
-        },
-        "supplemental_error": null,
-        "merged_element_count": 126,
-        "feature_count": 123,
-        "fresh_feature_count": 123,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 3
+        "error": "This operation was aborted",
+        "retained_feature_count": 123,
+        "retained_excluded_non_facility_count": 0
       },
       {
         "state": "WV",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:51:15Z",
-          "areas_base": "2026-09-30T08:16:49Z",
-          "source_lag_hours": 0.03,
-          "element_count": 26,
-          "attempts": 2
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 26,
-        "feature_count": 26,
-        "fresh_feature_count": 26,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
+        "error": "502 Bad Gateway",
+        "retained_feature_count": 26,
+        "retained_excluded_non_facility_count": 0
       },
       {
         "state": "WY",
-        "primary": {
-          "kind": "primary:sport=skateboard",
-          "endpoint": "https://lz4.overpass-api.de/api/interpreter",
-          "osm_base": "2026-10-01T16:52:15Z",
-          "areas_base": "2026-09-30T19:06:41Z",
-          "source_lag_hours": 0.03,
-          "element_count": 29,
-          "attempts": 1
-        },
-        "supplemental_enabled": true,
-        "supplemental": null,
-        "supplemental_error": "504 Gateway Timeout",
-        "merged_element_count": 29,
-        "feature_count": 29,
-        "fresh_feature_count": 29,
-        "retained_supplemental_feature_count": 0,
-        "excluded_non_facility_count": 0
+        "error": "This operation was aborted",
+        "retained_feature_count": 29,
+        "retained_excluded_non_facility_count": 0
       }
     ],
+    "state_sources": [],
     "source_freshness_policy_hours": 72,
     "supplemental_enabled": true,
-    "excluded_non_facility_count": 155,
-    "retained_failed_state_features": 276,
+    "excluded_non_facility_count": 0,
+    "retained_failed_state_features": 4220,
     "query_tags": [
       "leisure=skate_park (supplemental)",
       "leisure=skatepark (supplemental)",
@@ -1311,7 +388,7 @@
     },
     "park_intelligence": {
       "version": "0.1",
-      "enriched_at": "2026-10-01T16:54:46.974Z",
+      "enriched_at": "2026-10-15T14:32:16.333Z",
       "source": "stored_raw_osm_tags",
       "principle": "Only explicit OSM equipment, amenity, and activity-access tags are promoted. Broad terrain families are conservative mappings from explicit skatepark equipment tags; absent evidence remains unknown."
     }
